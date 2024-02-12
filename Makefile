@@ -4,7 +4,7 @@
 #
 
 # Unlike Merlin, dev-container with VSC gives username as "vscode", so change LOGIN to your login explicitly (be aware of no additional spaces)
-LOGIN=$(USER)
+LOGIN=xberdi01
 TEMP_DIR=temp
 TASK=2
 STUDENT_DIR=student
@@ -28,3 +28,5 @@ clean:
 	$(RM) *.zip is_it_ok.log
 	$(RM) -r $(TEMP_DIR)
 
+run:
+	if [ "${HOSTNAME}" = "merlin.fit.vutbr.cz" ]; then php8.3 $(SCRIPT) --help; else php $(SCRIPT) --source=test/source.src --input=test/input.src; fi
