@@ -9,7 +9,7 @@ use IPP\Student\Argument\AbstractArgument;
 
 class TypeArgument extends AbstractArgument
 {
-    protected function validate()
+    protected function validate(): void
     {
     }
 }

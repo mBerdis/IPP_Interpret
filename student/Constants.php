@@ -6,6 +6,7 @@
 
 namespace IPP\Student;
 
+use Closure;
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Argument\LabelArgument;
 use IPP\Student\Argument\SymbArgument;
@@ -14,12 +15,15 @@ use IPP\Student\Argument\VarArgument;
 
 class Constants
 {
-    private static $instance = null;
+    private static ?Constants $instance = null;
 
-    private $INST_EXECUTES;
-    private const ARGUMENT_NAMESPACE = "IPP\\Student\\Argument\\";
+    /** @var array<string, Closure>  */
+    private array $INST_EXECUTES;
 
-    private $INST_ARG_TYPES = [
+    private const string ARGUMENT_NAMESPACE = "IPP\\Student\\Argument\\";
+
+    /** @var array<string, array<string>>  */
+    private array $INST_ARG_TYPES = [
         // Work with memory frames
         "MOVE" 			=> ["VarArgument", "SymbArgument"],
         "CREATEFRAME" 	=> [],
@@ -37,7 +41,6 @@ class Constants
         "ADD" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
         "SUB" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
         "MUL" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
-        "SUB" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
         "IDIV" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
         "LT" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
         "GT" 			=> ["VarArgument", "SymbArgument", "SymbArgument"],
@@ -73,15 +76,19 @@ class Constants
         "BREAK" 		=> []
     ];
 
-    final public function __construct()
+    private function __construct()
     {
-        $this->INST_EXECUTES["MOVE"] = function($args){echo($args[0] . "\n");};
+        $this->INST_EXECUTES["MOVE"] = function($args)
+        {
+            Constants::get_instance();
+            echo($args[0] . "\n");
+        };
         $this->INST_EXECUTES["ADD"] = function($args){echo($args[0] . "\n");};
         $this->INST_EXECUTES["WRITE"] = function($args){echo($args[0] . "\n");};
         
     }
 
-    public static function getInstance()
+    public static function get_instance(): Constants
     {
       if (self::$instance == null)
         self::$instance = new Constants();
@@ -89,14 +96,15 @@ class Constants
       return self::$instance;
     }
 
-    public function get_execute_func($opCode)
+    public function get_execute_func(string $opCode): callable
     {
         if (!array_key_exists($opCode, $this->INST_EXECUTES))
             throw new XMLException("Unknown opcode!");
         return $this->INST_EXECUTES[$opCode];
     }
 
-    public function get_argument_types($opCode)
+    /** @return array<string> */
+    public function get_argument_types(string $opCode): array
     {
         if (!array_key_exists($opCode, $this->INST_ARG_TYPES))
             throw new XMLException("Unknown opcode!");

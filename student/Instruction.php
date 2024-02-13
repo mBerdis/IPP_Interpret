@@ -6,6 +6,7 @@
 
 namespace IPP\Student;
 
+use Closure;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Constants;
 use IPP\Student\Argument\LabelArgument;
@@ -15,17 +16,22 @@ use IPP\Student\Argument\VarArgument;
 
 class Instruction
 {
-    private $order;
-    private $opCode;
-    private $execute_func;
-    private $args;
+    private int $order;
+    private string $opCode;
+    private Closure $execute_func;
 
-    final public function __construct($order, $opCode, $args)
+    /** @var array<LabelArgument|SymbArgument|TypeArgument|VarArgument>  */
+    private array $args;
+
+    /** 
+     * @param array<int|string|bool> $args
+    */
+    final public function __construct(int $order, string $opCode, array $args)
     {
         $this->order    = $order;
         $this->opCode   = $opCode;
 
-        $arg_types = Constants::getInstance()->get_argument_types($opCode);
+        $arg_types = Constants::get_instance()->get_argument_types($opCode);
 
         if (count($args) != count($arg_types)) 
             throw new SemanticException("Wrong argument count for instruction: $opCode");
@@ -40,10 +46,10 @@ class Instruction
             $this->args[] = new $arg_type($args[$index]);
         }
 
-        $this->execute_func = Constants::getInstance()->get_execute_func($opCode);
+        $this->execute_func = Constants::get_instance()->get_execute_func($opCode);
     }
 
-    public function execute()
+    public function execute(): void
     {
         $func = $this->execute_func;
 

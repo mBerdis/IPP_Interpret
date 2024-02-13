@@ -8,20 +8,17 @@ namespace IPP\Student\Argument;
 
 abstract class AbstractArgument
 {
-    private $value;
+    private int|string|bool $value;
 
-    final public function __construct($value)
+    final public function __construct(int|string|bool $value)
     {
         $this->value = $value;
         $this->validate();
     }
 
-    protected function validate()
-    {
-        echo "here";
-    }
+    abstract protected function validate(): void;
 
-    public function get_value()
+    public function get_value(): int
     {
         return $this->value;
     }

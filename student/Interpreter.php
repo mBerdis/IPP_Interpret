@@ -6,6 +6,9 @@
 
 namespace IPP\Student;
 
+use DOMDocument;
+use DOMNode;
+use DOMElement;
 use IPP\Core\AbstractInterpreter;
 use IPP\Core\ReturnCode;
 use DOMXpath;
@@ -23,11 +26,14 @@ class Interpreter extends AbstractInterpreter
         "JUMP", "JUMPIFEQ", "JUMPIFNEQ", "EXIT", "DPRINT", "BREAK"
     ];
 
-    private const ARG_TYPES = ["var", "symb", "label", "type", "bool", "string", "int"];
-    private const ARG_REGEX = "/arg[1-9]+[0-9]*/";
+    private const array ARG_TYPES  = ["var", "symb", "label", "type", "bool", "string", "int"];
+    private const string ARG_REGEX = "/arg[1-9]+[0-9]*/";
 
-    private $GF;        // name (key) -> Variable (value)
-    private $labels;    // name (key) -> instrOrder (value)
+    /** @var array<string, string>  */
+    private array $GF;        // name (key) -> Variable (value)
+
+    /** @var array<string, int>  */
+    private array $labels;    // name (key) -> instrOrder (value)
 
     protected function init(): void
     {
@@ -37,11 +43,11 @@ class Interpreter extends AbstractInterpreter
         $this->labels   = array();
     }
 
-    private function validate_instruction_node($node, &$orders)
+    /**
+     * @param array<int> &$orders
+     */
+    private function validate_instruction_node(DOMElement &$node, array &$orders): void
     {
-        if ($node->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
-            return;
-
         if ($node->nodeName !== "instruction")
             throw new SourceStructureException("Expected instruction node!");
 
@@ -58,11 +64,8 @@ class Interpreter extends AbstractInterpreter
         $orders[] = $node->getAttribute("order");
     }
 
-    private function validate_arg_node($arg)
+    private function validate_arg_node(DOMElement &$arg): void
     {
-        if ($arg->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
-            return;
-
         if (!preg_match(self::ARG_REGEX, $arg->nodeName))
             throw new SourceStructureException("Expected arg node!");
 
@@ -70,7 +73,7 @@ class Interpreter extends AbstractInterpreter
             throw new XMLException("Unknown argument type!");
     }
 
-    private function validate_xml_attrs($dom, $xpath)
+    private function validate_xml_attrs(DOMDocument &$dom, DOMXpath &$xpath): void
     {
         if ($dom->documentElement->getAttribute("language") != "IPPcode24")
             throw new XMLException("Wrong language attribute of program!");
@@ -81,9 +84,15 @@ class Interpreter extends AbstractInterpreter
         # check if xml nodes are valid
         foreach ($childrenNodes as $node) 
         {
+            if ($node->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
+                continue;
             $this->validate_instruction_node($node, $orders);
             foreach ($node->childNodes as $arg)
+            {
+                if ($arg->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
+                    return;
                 $this->validate_arg_node($arg);
+            }
         }
 
         // if program is here, nodes are valid.
@@ -114,6 +123,8 @@ class Interpreter extends AbstractInterpreter
 
         # DEBUG
         foreach ($instructions as $instruction) {
+            $opCode = $instruction->getAttribute("opcode");
+            $order  = $instruction->getAttribute("order");
             // $this->stdout->writeString($instruction->getAttribute("opcode") . " " . $instruction->getAttribute("order") . "\n");
         }
         
@@ -137,12 +148,12 @@ class Interpreter extends AbstractInterpreter
         return ReturnCode::OK;
     }
 
-    public function add_label($label, $instrOrder)
+    public function add_label(string $label, int $instrOrder): void
     {
         $this->labels[$label] = $instrOrder;
     }
 
-    public function find_label($label): int
+    public function find_label(string $label): int
     {
         if (!array_key_exists($label, $this->labels))
             throw new SemanticException("Unknown label!");
