@@ -9,7 +9,7 @@ namespace IPP\Student\Instruction;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 
-class MOVE_Instruction extends AbstractInstruction
+class PUSHS_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -19,7 +19,7 @@ class MOVE_Instruction extends AbstractInstruction
     } 
 }
 
-class CREATEFRAME_Instruction extends AbstractInstruction
+class POPS_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -29,7 +29,7 @@ class CREATEFRAME_Instruction extends AbstractInstruction
     } 
 }
 
-class PUSHFRAME_Instruction extends AbstractInstruction
+class READ_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -39,7 +39,25 @@ class PUSHFRAME_Instruction extends AbstractInstruction
     } 
 }
 
-class POPFRAME_Instruction extends AbstractInstruction
+class WRITE_Instruction extends AbstractInstruction
+{
+    public function execute(): void 
+    {
+        $arg = $this->args[0];
+
+        $toWrite = $arg->is_nil()? "" : $arg->get_value();
+
+        if ($arg->is_var())
+        {
+            // get value
+            $toWrite = "its variable";
+        }
+
+        echo($toWrite);
+    } 
+}
+
+class TYPE_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -49,17 +67,7 @@ class POPFRAME_Instruction extends AbstractInstruction
     } 
 }
 
-class DEFVAR_Instruction extends AbstractInstruction
-{
-    public function execute(): void 
-    {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo(self::$interp->find_label("ahoj") . " DEFVAR instruction %d\n");
-    } 
-}
-
-class CALL_Instruction extends AbstractInstruction
+class DPRINT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -69,7 +77,7 @@ class CALL_Instruction extends AbstractInstruction
     } 
 }
 
-class RETURN_Instruction extends AbstractInstruction
+class BREAK_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {

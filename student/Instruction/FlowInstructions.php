@@ -9,7 +9,19 @@ namespace IPP\Student\Instruction;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 
-class MOVE_Instruction extends AbstractInstruction
+class LABEL_Instruction extends AbstractInstruction
+{
+    public function execute(): void 
+    {
+        if (!isset($this->args[0])) 
+            throw new SemanticException("Wrong label argument!");
+        
+        $label = $this->args[0]->get_value();
+        self::$interp->add_label($label, $this->order);
+    } 
+}
+
+class JUMP_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -19,7 +31,7 @@ class MOVE_Instruction extends AbstractInstruction
     } 
 }
 
-class CREATEFRAME_Instruction extends AbstractInstruction
+class JUMPIFEQ_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -29,7 +41,7 @@ class CREATEFRAME_Instruction extends AbstractInstruction
     } 
 }
 
-class PUSHFRAME_Instruction extends AbstractInstruction
+class JUMPIFNEQ_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
@@ -39,37 +51,7 @@ class PUSHFRAME_Instruction extends AbstractInstruction
     } 
 }
 
-class POPFRAME_Instruction extends AbstractInstruction
-{
-    public function execute(): void 
-    {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
-    } 
-}
-
-class DEFVAR_Instruction extends AbstractInstruction
-{
-    public function execute(): void 
-    {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo(self::$interp->find_label("ahoj") . " DEFVAR instruction %d\n");
-    } 
-}
-
-class CALL_Instruction extends AbstractInstruction
-{
-    public function execute(): void 
-    {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
-    } 
-}
-
-class RETURN_Instruction extends AbstractInstruction
+class EXIT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {

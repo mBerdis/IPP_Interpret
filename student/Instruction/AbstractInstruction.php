@@ -8,38 +8,30 @@ namespace IPP\Student\Instruction;
 
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Constants;
-use IPP\Student\Argument\LabelArgument;
-use IPP\Student\Argument\SymbArgument;
-use IPP\Student\Argument\TypeArgument;
-use IPP\Student\Argument\VarArgument;
+use IPP\Student\Argument;
+use IPP\Student\Interpreter;
 
 abstract class AbstractInstruction
 {
+    protected static Interpreter $interp; 
+
     protected int $order;
     protected string $opCode;
 
-    /** @var array<LabelArgument|SymbArgument|TypeArgument|VarArgument>  */
+    /** @var array<Argument> */
     protected array $args;
 
-    /** 
-     * @param array<int|string|bool> $args
-     * @param array<string> $arg_types An array of class names as strings
-    */
-    protected function __construct(int $order, string $opCode, array $args, array $arg_types)
+    /** @param array<Argument> $args */
+    public function __construct(int $order, string $opCode, array $args)
     {
         $this->order    = $order;
         $this->opCode   = $opCode;
+        $this->args     = $args;
+    }
 
-        // Instantiate objects based on class names in $arg_types
-        foreach ($arg_types as $index => $className) {
-            // Check if the index exists in $args to avoid errors
-            $argValue = isset($args[$index]) ? $args[$index] : null;
-
-            #TODO: throw exception
-
-            // Instantiate the class using the class name and pass the value from $args
-            $this->args[] = new $className($argValue);
-        }
+    public static function setInterpreter(Interpreter $interpreter): void
+    {
+        self::$interp = $interpreter;
     }
 
     abstract public function execute(): void;

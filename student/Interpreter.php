@@ -17,6 +17,9 @@ use IPP\Core\Exception\XMLException;
 use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\Move_Inst;
+use IPP\Student\Argument;
+use IPP\Student\Instruction\AbstractInstruction;
+use IPP\Student\Instruction\InstructionFactory;
 
 class Interpreter extends AbstractInterpreter
 {
@@ -112,6 +115,23 @@ class Interpreter extends AbstractInterpreter
             $dom->documentElement->appendChild($instruction);
     }
 
+    private function get_args(DOMElement &$instruction): array 
+    {
+        $args = array();
+
+        foreach ($instruction->childNodes as $arg)
+        {
+            if ($arg->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
+                continue;
+
+            $value = trim($arg->nodeValue);
+            $type  = $arg->getAttribute("type");
+            $args[] = new Argument($value, $type);
+        }
+
+        return $args;
+    }
+
     public function execute(): int
     {
         $dom = $this->source->getDOMDocument();
@@ -121,18 +141,23 @@ class Interpreter extends AbstractInterpreter
 
         $instructions = iterator_to_array($xpath->evaluate('/program/instruction'));
 
-        # DEBUG
+        $instructionList = array();
         foreach ($instructions as $instruction) {
             $opCode = $instruction->getAttribute("opcode");
             $order  = $instruction->getAttribute("order");
-            // $this->stdout->writeString($instruction->getAttribute("opcode") . " " . $instruction->getAttribute("order") . "\n");
+            $args   = $this->get_args($instruction);
+            $instructionList[] = InstructionFactory::create_Instruction($order, $opCode, $args);
         }
-        
-        //$this->add_label("hi", 8);
+
+        AbstractInstruction::setInterpreter($this);
+
+        $this->add_label("hi", 8);
         //$this->stdout->writeString($this->find_label("hi") . "\n");
 
-        $i = new Move_Inst(1, "MOVE", ["ahfg", 7]);
-        $i->execute();
+        foreach ($instructionList as $instruction)
+        {
+            $instruction->execute();
+        }
 
         // $val = $this->input->readString();
         // $this->stdout->writeString("stdout\n");

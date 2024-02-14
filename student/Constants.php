@@ -17,9 +17,6 @@ class Constants
 {
     private static ?Constants $instance = null;
 
-    /** @var array<string, Closure>  */
-    private array $INST_EXECUTES;
-
     private const string ARGUMENT_NAMESPACE = "IPP\\Student\\Argument\\";
 
     /** @var array<string, array<string>>  */
@@ -78,14 +75,7 @@ class Constants
 
     private function __construct()
     {
-        $this->INST_EXECUTES["MOVE"] = function($args)
-        {
-            Constants::get_instance();
-            echo($args[0] . "\n");
-        };
-        $this->INST_EXECUTES["ADD"] = function($args){echo($args[0] . "\n");};
-        $this->INST_EXECUTES["WRITE"] = function($args){echo($args[0] . "\n");};
-        
+ 
     }
 
     public static function get_instance(): Constants
