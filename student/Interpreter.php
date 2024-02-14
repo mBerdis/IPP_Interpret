@@ -6,6 +6,7 @@
 
 namespace IPP\Student;
 
+require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 use DOMDocument;
 use DOMNode;
 use DOMElement;
@@ -15,6 +16,7 @@ use DOMXpath;
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
+use IPP\Student\Instruction\Move_Inst;
 
 class Interpreter extends AbstractInterpreter
 {
@@ -43,9 +45,7 @@ class Interpreter extends AbstractInterpreter
         $this->labels   = array();
     }
 
-    /**
-     * @param array<int> &$orders
-     */
+    /** @param array<int> &$orders */
     private function validate_instruction_node(DOMElement &$node, array &$orders): void
     {
         if ($node->nodeName !== "instruction")
@@ -131,15 +131,8 @@ class Interpreter extends AbstractInterpreter
         //$this->add_label("hi", 8);
         //$this->stdout->writeString($this->find_label("hi") . "\n");
 
-        $i = new Instruction(1, "MOVE", [5, 5]);
+        $i = new Move_Inst(1, "MOVE", ["ahfg", 7]);
         $i->execute();
-
-        $i2 = new Instruction(2, "ADD", [15454, 5, 45]);
-        $i2->execute();
-
-        $i3 = new Instruction(3, "WRITE", [2]);
-        $i3->execute();
-
 
         // $val = $this->input->readString();
         // $this->stdout->writeString("stdout\n");

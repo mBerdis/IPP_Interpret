@@ -9,7 +9,9 @@ use IPP\Student\Argument\AbstractArgument;
 
 class SymbArgument extends AbstractArgument
 {
-    protected function validate(): void
+    public function __construct(string $value)
     {
+        $split = explode("@", $value);
+        parent::__construct($value);
     }
 }

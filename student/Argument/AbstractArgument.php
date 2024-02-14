@@ -10,15 +10,12 @@ abstract class AbstractArgument
 {
     private int|string|bool $value;
 
-    final public function __construct(int|string|bool $value)
+    public function __construct(string $value)
     {
         $this->value = $value;
-        $this->validate();
     }
 
-    abstract protected function validate(): void;
-
-    public function get_value(): int
+    public function get_value(): int|string|bool
     {
         return $this->value;
     }

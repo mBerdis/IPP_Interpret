@@ -9,7 +9,8 @@ use IPP\Student\Argument\AbstractArgument;
 
 class LabelArgument extends AbstractArgument
 {
-    protected function validate(): void
+    public function __construct(string $value)
     {
+        parent::__construct($value);
     }
 }
