@@ -6,6 +6,8 @@
 
 namespace IPP\Student\Instruction;
 
+use IPP\Student\DataType;
+use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 
@@ -33,9 +35,30 @@ class READ_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "type");
+        
+        $arg = $this->args[0];
+
+        $frame = $arg->get_frame();
+        $name  = $arg->get_value();
+
+        switch ($this->args[1]->get_value()) {
+            case "int":
+                $type = DataType::INT;
+                break;
+            case "string":
+                $type = DataType::STRING;
+                break;
+            case "bool":
+                $type = DataType::BOOL;
+                break;
+
+            default:
+                throw new OperandTypeException();
+        }
+
+        self::$interp->read_to_var($frame, $name, $type);
     } 
 }
 
@@ -49,8 +72,9 @@ class WRITE_Instruction extends AbstractInstruction
 
         if ($arg->is_var())
         {
-            // get value
-            $toWrite = "its variable";
+            $frame = $arg->get_frame();
+            $name  = $arg->get_value();
+            $toWrite = self::$interp->get_variable_data($frame, $name);
         }
 
         echo($toWrite);

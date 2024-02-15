@@ -6,9 +6,10 @@
 
 namespace IPP\Student\Instruction;
 
-use IPP\Student\Exception\SemanticException;
+require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use IPP\Student\Constants;
 use IPP\Student\Argument;
+use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Interpreter;
 
 abstract class AbstractInstruction
@@ -35,4 +36,10 @@ abstract class AbstractInstruction
     }
 
     abstract public function execute(): void;
+
+    protected static function check_arg_type(?Argument &$arg, string $type): void
+    {
+        if (!isset($arg) || $arg->get_type() !== $type) 
+            throw new OperandTypeException();
+    }
 }

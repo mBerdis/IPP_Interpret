@@ -5,6 +5,8 @@
  */
 
 namespace IPP\Student;
+
+use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\SemanticException;
 
 class Argument
@@ -40,6 +42,14 @@ class Argument
     public function get_type(): string
     {
         return $this->type;
+    }
+
+    public function get_frame(): string
+    {
+        if (!isset($this->frame)) 
+            throw new OperandTypeException();
+        
+        return $this->frame;
     }
 
     public function is_var(): bool 

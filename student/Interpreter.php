@@ -7,6 +7,7 @@
 namespace IPP\Student;
 
 require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
+require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use DOMDocument;
 use DOMNode;
 use DOMElement;
@@ -18,6 +19,8 @@ use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\Move_Inst;
 use IPP\Student\Argument;
+use IPP\Student\Exception\OperandTypeException;
+use IPP\Student\Exception\VariableAccessException;
 use IPP\Student\Instruction\AbstractInstruction;
 use IPP\Student\Instruction\InstructionFactory;
 
@@ -34,8 +37,8 @@ class Interpreter extends AbstractInterpreter
     private const array ARG_TYPES  = ["var", "symb", "label", "type", "bool", "string", "int"];
     private const string ARG_REGEX = "/arg[1-9]+[0-9]*/";
 
-    /** @var array<string, string>  */
-    private array $GF;        // name (key) -> Variable (value)
+    /** @var array<string, VariableData>  */
+    private array $GF;        // varName (key) -> VariableData (value)
 
     /** @var array<string, int>  */
     private array $labels;    // name (key) -> instrOrder (value)
@@ -177,6 +180,72 @@ class Interpreter extends AbstractInterpreter
             throw new SemanticException("Unknown label!");
 
         return $this->labels[$label];
+    }
+
+    public function add_variable(string $frame, string $varName): void
+    {
+        if ($frame === "GF") 
+        {
+            if (array_key_exists($varName, $this->GF))
+                throw new SemanticException("Variable redefinition!");
+            
+            $this->GF[$varName] = new VariableData();
+        }
+        # TODO rest of frames
+    }
+
+    private function get_variable(string $frame, string $varName): VariableData 
+    {
+        if ($frame === "GF") 
+        {
+            if (!array_key_exists($varName, $this->GF))
+                throw new VariableAccessException();
+
+            return $this->GF[$varName];
+        }
+        # TODO rest of frames
+        throw new VariableAccessException();
+    }
+
+    public function get_variable_data(string $frame, string $varName): int|string|bool
+    {
+        $variable = $this->get_variable($frame, $varName);
+        return $variable->get_value();
+    }
+
+    public function update_variable(string $frame, string $varName, int|string|bool $value, DataType $type): void 
+    {
+        $variable = $this->get_variable($frame, $varName);
+        $variable->set_var($value, $type);
+    }
+
+    public function read_to_var(string $frame, string $varName, DataType $type): void
+    {
+        $val = "";
+        switch ($type) {
+            case DataType::BOOL:
+                $val = $this->input->readBool();
+                break;
+
+            case DataType::INT:
+                $val = $this->input->readInt();
+                break;
+
+            case DataType::STRING:
+                $val = $this->input->readString();
+                break;
+            
+            default:
+                throw new OperandTypeException();
+        }
+
+        if (is_null($val))
+        {
+            $type = DataType::NIL;
+            $val  = "nil";
+        }
+
+        $this->update_variable($frame, $varName, $val, $type);
     }
 
 }

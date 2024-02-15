@@ -13,6 +13,10 @@ class ADD_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "int");
+        self::check_arg_type($this->args[2], "int");
+
         //echo($this->args[0]->get_value());
         //echo($this->args[1]->get_value());
         echo("MOVE instruction %d\n");
