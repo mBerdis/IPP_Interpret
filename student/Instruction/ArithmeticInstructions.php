@@ -8,6 +8,9 @@ namespace IPP\Student\Instruction;
 
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
+use IPP\Student\Exception\OperandValueException;
+use IPP\Student\Exception\OperandTypeException;
+use IPP\Student\Exception\StringOpException;
 
 class ADD_Instruction extends AbstractInstruction
 {
@@ -17,9 +20,9 @@ class ADD_Instruction extends AbstractInstruction
         self::check_arg_type($this->args[1], "int");
         self::check_arg_type($this->args[2], "int");
 
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() + $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "int");
     } 
 }
 
@@ -27,9 +30,13 @@ class SUB_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "int");
+        self::check_arg_type($this->args[2], "int");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() - $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "int");
     } 
 }
 
@@ -37,9 +44,13 @@ class MUL_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "int");
+        self::check_arg_type($this->args[2], "int");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() * $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "int");
     } 
 }
 
@@ -47,9 +58,16 @@ class IDIV_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "int");
+        self::check_arg_type($this->args[2], "int");
+
+        if ($this->args[2]->get_value() === 0) 
+            throw new OperandValueException("Division by zero!");
+
+        $arg1 = $this->args[0];
+        $val = intdiv($this->args[1]->get_value(), $this->args[2]->get_value());
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "int");
     } 
 }
 
@@ -57,9 +75,17 @@ class LT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+
+        if ($this->args[1]->is_nil() || $this->args[2]->is_nil()) 
+            throw new OperandTypeException("LT operand is type nil!");
+
+        if ($this->args[1]->get_type() !== $this->args[2]->get_type()) 
+            throw new OperandTypeException("LT operand type mismatch!");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() < $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
 
@@ -67,9 +93,17 @@ class GT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+
+        if ($this->args[1]->is_nil() || $this->args[2]->is_nil()) 
+            throw new OperandTypeException("GT operand is type nil!");
+
+        if ($this->args[1]->get_type() !== $this->args[2]->get_type()) 
+            throw new OperandTypeException("GT operand type mismatch!");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() > $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
 
@@ -77,9 +111,14 @@ class EQ_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+
+        if ($this->args[1]->get_type() !== $this->args[2]->get_type()) 
+            throw new OperandTypeException("EQ operand type mismatch!");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() === $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
 
@@ -87,9 +126,13 @@ class AND_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "bool");
+        self::check_arg_type($this->args[2], "bool");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() and $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
 
@@ -97,9 +140,13 @@ class OR_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "bool");
+        self::check_arg_type($this->args[2], "bool");
+
+        $arg1 = $this->args[0];
+        $val = $this->args[1]->get_value() or $this->args[2]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
 
@@ -107,9 +154,12 @@ class NOT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "bool");
+
+        $arg1 = $this->args[0];
+        $val = !$this->args[1]->get_value();
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
 
@@ -117,9 +167,13 @@ class INT2CHAR_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+
+        $arg1 = $this->args[0];
+        $val = chr($this->args[0]->get_value());
+        if ($val === "")
+            throw new StringOpException("Wrong INT2CHAR value!");
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "string");
     } 
 }
 
@@ -127,8 +181,22 @@ class STRI2INT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+
+        // retrieve values stored in variable
+        if ($this->args[2]->is_var())
+            $pos = self::$interp->get_variable_data($this->args[2]->get_frame(), $this->args[2]->get_value());
+        else 
+            $pos = $this->args[2]->get_value();
+
+        if ($this->args[1]->is_var())
+            $str = self::$interp->get_variable_data($this->args[1]->get_frame(), $this->args[1]->get_value());
+        else 
+            $str = $this->args[1]->get_value();
+
+        $arg1 = $this->args[0];
+        $val = ord($str[$pos]);
+
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "int");
     } 
 }
