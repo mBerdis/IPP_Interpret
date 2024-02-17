@@ -42,21 +42,7 @@ class READ_Instruction extends AbstractInstruction
 
         $frame = $arg->get_frame();
         $name  = $arg->get_value();
-
-        switch ($this->args[1]->get_value()) {
-            case "int":
-                $type = DataType::INT;
-                break;
-            case "string":
-                $type = DataType::STRING;
-                break;
-            case "bool":
-                $type = DataType::BOOL;
-                break;
-
-            default:
-                throw new OperandTypeException();
-        }
+        $type  = $this->args[1]->get_value();
 
         self::$interp->read_to_var($frame, $name, $type);
     } 

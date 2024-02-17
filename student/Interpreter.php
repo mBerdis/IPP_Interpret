@@ -19,6 +19,7 @@ use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\Move_Inst;
 use IPP\Student\Argument;
+use IPP\Student\Exception\FrameAccessException;
 use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\VariableAccessException;
 use IPP\Student\Instruction\AbstractInstruction;
@@ -40,6 +41,12 @@ class Interpreter extends AbstractInterpreter
     /** @var array<string, VariableData>  */
     private array $GF;        // varName (key) -> VariableData (value)
 
+    /** @var array<string, VariableData>  */
+    private ?array $TF = NULL;        // varName (key) -> VariableData (value)
+
+    /** @var array<array<string, VariableData>> */
+    private array $frameStack;
+
     /** @var array<string, int>  */
     private array $labels;    // name (key) -> instrOrder (value)
 
@@ -47,8 +54,9 @@ class Interpreter extends AbstractInterpreter
     {
         parent::init();
 
-        $this->GF       = array();
-        $this->labels   = array();
+        $this->GF           = array();
+        $this->labels       = array();
+        $this->frameStack   = array();
     }
 
     /** @param array<int> &$orders */
@@ -184,27 +192,63 @@ class Interpreter extends AbstractInterpreter
 
     public function add_variable(string $frame, string $varName): void
     {
-        if ($frame === "GF") 
-        {
-            if (array_key_exists($varName, $this->GF))
-                throw new SemanticException("Variable redefinition!");
+        switch ($frame) {
+            case "GF":
+                if (array_key_exists($varName, $this->GF))
+                    throw new SemanticException("Variable $varName redefinition!");
+                $this->GF[$varName] = new VariableData();
+                break;
             
-            $this->GF[$varName] = new VariableData();
+            case "TF":
+                if (!$this->TF)
+                    throw new FrameAccessException("TF does not exist!");
+                if (array_key_exists($varName, $this->TF))
+                    throw new SemanticException("Variable $varName redefinition!");
+                $this->TF[$varName] = new VariableData();
+                break;
+
+            case "LF":
+                if (empty($this->frameStack))
+                    throw new FrameAccessException("LF does not exist!");
+
+                $LF = end($this->frameStack);
+                if (array_key_exists($varName, $LF))
+                    throw new SemanticException("Variable $varName redefinition!");
+                $LF[$varName] = new VariableData();
+                break;
+
+            default:
+                throw new FrameAccessException();
         }
-        # TODO rest of frames
     }
 
     private function get_variable(string $frame, string $varName): VariableData 
     {
-        if ($frame === "GF") 
-        {
-            if (!array_key_exists($varName, $this->GF))
-                throw new VariableAccessException();
+        switch ($frame) {
+            case "GF":
+                if (!array_key_exists($varName, $this->GF))
+                    throw new VariableAccessException();
+                return $this->GF[$varName];
+            
+            case "TF":
+                if (!$this->TF)
+                    throw new FrameAccessException("TF does not exist!");
+                if (!array_key_exists($varName, $this->TF))
+                    throw new VariableAccessException("Variable $varName doesnt exist in TF!");
+                return $this->TF[$varName];
 
-            return $this->GF[$varName];
+            case "LF":
+                if (empty($this->frameStack))
+                    throw new FrameAccessException("LF does not exist!");
+
+                $LF = end($this->frameStack);
+                if (!array_key_exists($varName, $LF))
+                    throw new VariableAccessException("Variable $varName doesnt exist in LF!");
+                return $LF[$varName];
+
+            default:
+                throw new FrameAccessException();
         }
-        # TODO rest of frames
-        throw new VariableAccessException();
     }
 
     public function get_variable_data(string $frame, string $varName): int|string|bool
@@ -213,25 +257,26 @@ class Interpreter extends AbstractInterpreter
         return $variable->get_value();
     }
 
-    public function update_variable(string $frame, string $varName, int|string|bool $value, DataType $type): void 
+    public function update_variable(string $frame, string $varName, int|string|bool $value, string $type): void 
     {
+        $varType = $this->type_from_str($type);
         $variable = $this->get_variable($frame, $varName);
-        $variable->set_var($value, $type);
+        $variable->set_var($value, $varType);
     }
 
-    public function read_to_var(string $frame, string $varName, DataType $type): void
+    public function read_to_var(string $frame, string $varName, string $type): void
     {
         $val = "";
         switch ($type) {
-            case DataType::BOOL:
+            case "bool":
                 $val = $this->input->readBool();
                 break;
 
-            case DataType::INT:
+            case "int":
                 $val = $this->input->readInt();
                 break;
 
-            case DataType::STRING:
+            case "string":
                 $val = $this->input->readString();
                 break;
             
@@ -241,11 +286,45 @@ class Interpreter extends AbstractInterpreter
 
         if (is_null($val))
         {
-            $type = DataType::NIL;
+            $type = "nil";
             $val  = "nil";
         }
 
         $this->update_variable($frame, $varName, $val, $type);
     }
 
+    public function create_frame(): void
+    {
+        $this->TF = [];
+    }
+
+    public function push_frame(): void
+    {
+        array_push($this->frameStack, $this->TF);
+        $this->TF = NULL;
+    }
+
+    public function pop_frame() : void 
+    {
+        if (!end($this->frameStack))
+            throw new FrameAccessException("Trying to pop non-existing frame!");
+
+        $this->TF = array_pop($this->frameStack);
+    }
+
+    private function type_from_str(string $str): DataType
+    {
+        switch ($str) {
+            case "int":
+                return DataType::INT;
+            case "string":
+                return DataType::STRING;
+            case "bool":
+                return DataType::BOOL;
+            case "nil":
+                return DataType::NIL;
+            default:
+                return DataType::UNDEFINED;
+        }
+    }
 }

@@ -6,16 +6,24 @@
 
 namespace IPP\Student\Instruction;
 
-use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 
 class MOVE_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+        self::check_arg_type($this->args[1], "symb");
+        
+        $arg1 = $this->args[0];
+        $arg2 = $this->args[1];
+
+        if ($arg1->is_var()) 
+            $toCopy = self::$interp->get_variable_data($arg2->get_frame(), $arg2->get_value());
+        else 
+            $toCopy = $arg2->get_value();
+
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $toCopy, $arg2->get_type());
     } 
 }
 
@@ -23,9 +31,7 @@ class CREATEFRAME_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::$interp->create_frame();
     } 
 }
 
@@ -33,9 +39,7 @@ class PUSHFRAME_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::$interp->push_frame();
     } 
 }
 
@@ -43,9 +47,7 @@ class POPFRAME_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::$interp->pop_frame();
     } 
 }
 

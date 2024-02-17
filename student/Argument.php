@@ -6,8 +6,10 @@
 
 namespace IPP\Student;
 
+require_once '/ipp-php/student/VariableData.php';
 use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\SemanticException;
+use IPP\Student\DataType;
 
 class Argument
 {
@@ -23,7 +25,7 @@ class Argument
         $this->value = $value;
         $this->type  = $type;
 
-        if ($this->is_var()) 
+        if ($type === "var") 
         {
             if (!strpos($value, "@")) 
                 throw new SemanticException("Variable in wrong format!");
