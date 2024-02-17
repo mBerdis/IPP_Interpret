@@ -54,16 +54,18 @@ class WRITE_Instruction extends AbstractInstruction
     {
         $arg = $this->args[0];
 
-        $toWrite = $arg->is_nil()? "" : $arg->get_value();
-
         if ($arg->is_var())
         {
             $frame = $arg->get_frame();
             $name  = $arg->get_value();
             $toWrite = self::$interp->get_variable_data($frame, $name);
         }
+        else 
+        {
+            $toWrite = $arg->get_value();
+        }
 
-        echo($toWrite);
+        self::$interp->stdout_write($toWrite, $arg->get_type());
     } 
 }
 

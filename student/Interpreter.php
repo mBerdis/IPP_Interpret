@@ -65,17 +65,18 @@ class Interpreter extends AbstractInterpreter
         if ($node->nodeName !== "instruction")
             throw new SourceStructureException("Expected instruction node!");
 
-        if (!in_array($node->getAttribute("opcode"), $this::OP_CODES))
+        if (!in_array(strtoupper($node->getAttribute("opcode")), $this::OP_CODES))
             throw new XMLException("Unknown opcode!");
 
-        if ($node->getAttribute("order") < 0)
+        $order = intval($node->getAttribute("order")); // Cast to integer
+        if ($order < 0)
             throw new SourceStructureException("Negative instruction order!");
 
-        if (in_array($node->getAttribute("order"), $orders))
+        if (in_array($order, $orders))
             throw new SourceStructureException("Instruction order duplicity!");
 
         # add instruction`s order to the array
-        $orders[] = $node->getAttribute("order");
+        $orders[] = $order;
     }
 
     private function validate_arg_node(DOMElement &$arg): void
@@ -104,7 +105,7 @@ class Interpreter extends AbstractInterpreter
             foreach ($node->childNodes as $arg)
             {
                 if ($arg->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
-                    return;
+                    continue;
                 $this->validate_arg_node($arg);
             }
         }
@@ -154,7 +155,7 @@ class Interpreter extends AbstractInterpreter
 
         $instructionList = array();
         foreach ($instructions as $instruction) {
-            $opCode = $instruction->getAttribute("opcode");
+            $opCode = strtoupper($instruction->getAttribute("opcode"));
             $order  = $instruction->getAttribute("order");
             $args   = $this->get_args($instruction);
             $instructionList[] = InstructionFactory::create_Instruction($order, $opCode, $args);
@@ -171,7 +172,7 @@ class Interpreter extends AbstractInterpreter
         }
 
         // $val = $this->input->readString();
-        // $this->stdout->writeString("stdout\n");
+        $this->stdout->writeString("stdout\n");
         // $this->stderr->writeString("stderr\n");
 
         return ReturnCode::OK;
@@ -325,6 +326,39 @@ class Interpreter extends AbstractInterpreter
                 return DataType::NIL;
             default:
                 return DataType::UNDEFINED;
+        }
+    }
+
+    public function stdout_write(string $msg, string $type): void 
+    {
+        switch ($type) {
+            case "int":
+                $this->stdout->writeInt(intval($msg));
+                break;
+
+            case "nil":
+                $this->stdout->writeString("");
+                break;
+
+            case "bool":
+                if ($msg === "true") 
+                    $this->stdout->writeBool(true);
+                else
+                    $this->stdout->writeBool(false);
+                break;
+
+            case "float":
+                $this->stdout->writeFloat(floatval($msg));
+                break;
+
+            default:
+                // replace escaped seq with corresponding chars
+                $msg = preg_replace_callback('/\\\\(\d{3})/', function ($matches) {
+                    return chr(($matches[1]));
+                }, $msg);
+
+                $this->stdout->writeString($msg);
+                break;
         }
     }
 }
