@@ -15,15 +15,11 @@ class MOVE_Instruction extends AbstractInstruction
     {
         self::check_arg_type($this->args[0], "var");
         
-        $arg1 = $this->args[0];
-        $arg2 = $this->args[1];
+        $arg1   = $this->args[0];
+        $toCopy = self::get_arg_data($this->args[1]);
+        $type   = self::get_arg_type($this->args[1]);
 
-        if ($arg2->is_var()) 
-            $toCopy = self::$interp->get_variable_data($arg2->get_frame(), $arg2->get_value());
-        else 
-            $toCopy = $arg2->get_value();
-
-        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $toCopy, $arg2->get_type());
+        self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $toCopy, $type);
     } 
 }
 

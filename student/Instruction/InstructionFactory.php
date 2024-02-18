@@ -11,7 +11,6 @@ require_once '/ipp-php/student/Instruction/FlowInstructions.php';
 require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 require_once '/ipp-php/student/Instruction/MiscInstructions.php';
 require_once '/ipp-php/student/Instruction/StringInstructions.php';
-use IPP\Student\Exception\SemanticException;
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Argument;
 

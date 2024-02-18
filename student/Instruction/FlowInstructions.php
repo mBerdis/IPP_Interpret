@@ -52,27 +52,10 @@ class JUMPIFEQ_Instruction extends AbstractInstruction
         if ($this->args[1]->is_nil() || $this->args[2]->is_nil())
             throw new OperandTypeException("JUMPIFEQ nil operand type!");
 
-        if ($this->args[1]->is_var())
-        {
-            $data1 = self::$interp->get_variable_data($this->args[1]->get_frame(), $this->args[1]->get_value());
-            $type1 = self::$interp->get_variable_type($this->args[1]->get_frame(), $this->args[1]->get_value());
-        }
-        else 
-        {
-            $data1 = $this->args[1]->get_value();
-            $type1 = $this->args[1]->get_type();
-        }
-
-        if ($this->args[2]->is_var())
-        {
-            $data2 = self::$interp->get_variable_data($this->args[2]->get_frame(), $this->args[2]->get_value());
-            $type2 = self::$interp->get_variable_type($this->args[2]->get_frame(), $this->args[2]->get_value());
-        }
-        else 
-        {
-            $data2 = $this->args[2]->get_value();
-            $type2 = $this->args[2]->get_type();
-        }
+        $data1 = self::get_arg_data($this->args[1]);
+        $type1 = self::get_arg_type($this->args[1]);
+        $data2 = self::get_arg_data($this->args[2]);
+        $type2 = self::get_arg_type($this->args[2]);
            
         if ($type1 !== $type2)
             throw new OperandTypeException("JUMPIFEQ operand type mismatch! $type1 !== $type2");
@@ -95,27 +78,10 @@ class JUMPIFNEQ_Instruction extends AbstractInstruction
         if ($this->args[1]->is_nil() || $this->args[2]->is_nil())
             throw new OperandTypeException("JUMPIFNEQ nil operand type!");
 
-        if ($this->args[1]->is_var())
-        {
-            $data1 = self::$interp->get_variable_data($this->args[1]->get_frame(), $this->args[1]->get_value());
-            $type1 = self::$interp->get_variable_type($this->args[1]->get_frame(), $this->args[1]->get_value());
-        }
-        else 
-        {
-            $data1 = $this->args[1]->get_value();
-            $type1 = $this->args[1]->get_type();
-        }
-
-        if ($this->args[2]->is_var())
-        {
-            $data2 = self::$interp->get_variable_data($this->args[2]->get_frame(), $this->args[2]->get_value());
-            $type2 = self::$interp->get_variable_type($this->args[2]->get_frame(), $this->args[2]->get_value());
-        }
-        else 
-        {
-            $data2 = $this->args[2]->get_value();
-            $type2 = $this->args[2]->get_type();
-        }
+        $data1 = self::get_arg_data($this->args[1]);
+        $type1 = self::get_arg_type($this->args[1]);
+        $data2 = self::get_arg_data($this->args[2]);
+        $type2 = self::get_arg_type($this->args[2]);
            
         if ($type1 !== $type2)
             throw new OperandTypeException("JUMPIFNEQ operand type mismatch!");
@@ -133,11 +99,8 @@ class EXIT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        if ($this->args[0]->is_var())
-            $val = self::$interp->get_variable_data($this->args[0]->get_frame(), $this->args[0]->get_value());
-        else
-            $val = $this->args[0]->get_value();
-
+        $val = self::get_arg_data($this->args[1]);
+        
         if ($val < 0 || $val > 9) 
             throw new OperandValueException("Wrong operand value for EXIT!");
 

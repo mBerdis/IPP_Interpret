@@ -52,20 +52,10 @@ class WRITE_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        $arg = $this->args[0];
+        $toWrite = self::get_arg_data($this->args[0]);
+        $type = self::get_arg_type($this->args[0]);
 
-        if ($arg->is_var())
-        {
-            $frame = $arg->get_frame();
-            $name  = $arg->get_value();
-            $toWrite = self::$interp->get_variable_data($frame, $name);
-        }
-        else 
-        {
-            $toWrite = $arg->get_value();
-        }
-
-        self::$interp->stdout_write($toWrite, $arg->get_type());
+        self::$interp->stdout_write($toWrite, $type);
     } 
 }
 
@@ -75,16 +65,10 @@ class TYPE_Instruction extends AbstractInstruction
     {
         self::check_arg_type($this->args[0], "var");
 
-        if ($this->args[1]->is_var())
-            $type = self::$interp->get_variable_type($this->args[1]->get_frame(), $this->args[1]->get_value());
-        else
-            $type = $this->args[1]->get_type();
-
+        $type = self::get_arg_type($this->args[1]);
         $arg = $this->args[0];
-        $frame = $arg->get_frame();
-        $name  = $arg->get_value();
 
-        self::$interp->update_variable($frame, $name, $type, "string");
+        self::$interp->update_variable($arg->get_frame(), $arg->get_value(), $type, "string");
     } 
 }
 
@@ -92,20 +76,10 @@ class DPRINT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        $arg = $this->args[0];
+        $toWrite = self::get_arg_data($this->args[0]);
+        $type = self::get_arg_type($this->args[0]);
 
-        if ($arg->is_var())
-        {
-            $frame = $arg->get_frame();
-            $name  = $arg->get_value();
-            $toWrite = self::$interp->get_variable_data($frame, $name);
-        }
-        else 
-        {
-            $toWrite = $arg->get_value();
-        }
-
-        self::$interp->stderr_write($toWrite, $arg->get_type());
+        self::$interp->stderr_write($toWrite, $type);
     } 
 }
 
