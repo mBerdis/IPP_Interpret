@@ -263,6 +263,31 @@ class Interpreter extends AbstractInterpreter
         return $variable->get_value();
     }
 
+    public function get_variable_type(string $frame, string $varName): string
+    {
+        $variable = $this->get_variable($frame, $varName);
+        switch ($variable->get_type()) 
+        {
+            case DataType::INT:
+                $type = "int";
+                break;
+            case DataType::STRING:
+                $type = "string";
+                break;
+            case DataType::BOOL:
+                $type = "bool";
+                break;
+            case DataType::NIL:
+                $type = "nil";
+                break;
+
+            default:
+                $type = "";
+                break;
+        }
+        return $type;
+    }
+
     public function update_variable(string $frame, string $varName, int|string|bool $value, string $type): void 
     {
         $varType = $this->type_from_str($type);

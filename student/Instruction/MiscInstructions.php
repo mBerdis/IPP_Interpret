@@ -73,9 +73,18 @@ class TYPE_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "var");
+
+        if ($this->args[1]->is_var())
+            $type = self::$interp->get_variable_type($this->args[1]->get_frame(), $this->args[1]->get_value());
+        else
+            $type = $this->args[1]->get_type();
+
+        $arg = $this->args[0];
+        $frame = $arg->get_frame();
+        $name  = $arg->get_value();
+
+        self::$interp->update_variable($frame, $name, $type, "string");
     } 
 }
 

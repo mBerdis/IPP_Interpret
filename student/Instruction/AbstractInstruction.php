@@ -39,8 +39,36 @@ abstract class AbstractInstruction
 
     protected static function check_arg_type(?Argument &$arg, string $type): void
     {
-        if (!isset($arg) || $arg->get_type() !== $type) 
-            throw new OperandTypeException();
+        if (!isset($arg)) 
+        {
+            throw new OperandTypeException("Operand type error! Argument not set!");
+        }
+        if ($arg->get_type() !== $type) 
+        {
+            $gotType = $arg->get_type();
+            $thisClass = static::class;
+            throw new OperandTypeException("Operand type error! Expected $type, got $gotType. at $thisClass");
+        }     
+    }
+
+    protected static function get_arg_data(Argument &$arg): int|bool|string 
+    {
+        if ($arg->is_var()) 
+            $data = self::$interp->get_variable_data($arg->get_frame(), $arg->get_value());
+        else
+            $data = $arg->get_value();
+
+        return $data;
+    }
+
+    protected static function get_arg_type(Argument &$arg): string
+    {
+        if ($arg->is_var()) 
+            $type = self::$interp->get_variable_type($arg->get_frame(), $arg->get_value());
+        else
+            $type = $arg->get_type();
+
+        return $type;
     }
 
     public function get_order(): int 

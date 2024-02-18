@@ -13,12 +13,11 @@ class MOVE_Instruction extends AbstractInstruction
     public function execute(): void 
     {
         self::check_arg_type($this->args[0], "var");
-        self::check_arg_type($this->args[1], "symb");
         
         $arg1 = $this->args[0];
         $arg2 = $this->args[1];
 
-        if ($arg1->is_var()) 
+        if ($arg2->is_var()) 
             $toCopy = self::$interp->get_variable_data($arg2->get_frame(), $arg2->get_value());
         else 
             $toCopy = $arg2->get_value();
