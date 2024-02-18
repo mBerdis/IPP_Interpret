@@ -11,6 +11,7 @@ require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use DOMDocument;
 use DOMNode;
 use DOMElement;
+use ArrayIterator;
 use IPP\Core\AbstractInterpreter;
 use IPP\Core\ReturnCode;
 use DOMXpath;
@@ -49,6 +50,10 @@ class Interpreter extends AbstractInterpreter
 
     /** @var array<string, int>  */
     private array $labels;    // name (key) -> instrOrder (value)
+
+    private int  $exit_code     = 0; // set by EXIT instruction
+    private bool $halt          = false;
+    private int  $currentOrder  = 0;
 
     protected function init(): void
     {
@@ -152,30 +157,26 @@ class Interpreter extends AbstractInterpreter
         $this->validate_xml_attrs($dom, $xpath);
 
         $instructions = iterator_to_array($xpath->evaluate('/program/instruction'));
+        AbstractInstruction::setInterpreter($this);
 
         $instructionList = array();
         foreach ($instructions as $instruction) {
             $opCode = strtoupper($instruction->getAttribute("opcode"));
             $order  = $instruction->getAttribute("order");
             $args   = $this->get_args($instruction);
-            $instructionList[] = InstructionFactory::create_Instruction($order, $opCode, $args);
+            $instructionList[$order] = InstructionFactory::create_Instruction($order, $opCode, $args);
         }
 
-        AbstractInstruction::setInterpreter($this);
+        $instKeys = array_keys($instructionList);
 
-        $this->add_label("hi", 8);
-        //$this->stdout->writeString($this->find_label("hi") . "\n");
-
-        foreach ($instructionList as $instruction)
-        {
-            $instruction->execute();
+        for ($i = 0; ($i < count($instKeys)) && !$this->halt; $i++) 
+        { 
+            $this->currentOrder = $instKeys[$i];
+            $instructionList[$this->currentOrder]->execute();
+            $i = array_search($this->currentOrder, $instKeys);
         }
 
-        // $val = $this->input->readString();
-        $this->stdout->writeString("stdout\n");
-        // $this->stderr->writeString("stderr\n");
-
-        return ReturnCode::OK;
+        return $this->exit_code;
     }
 
     public function add_label(string $label, int $instrOrder): void
@@ -360,5 +361,20 @@ class Interpreter extends AbstractInterpreter
                 $this->stdout->writeString($msg);
                 break;
         }
+    }
+
+    public function set_exit_code(int $exitCode): void 
+    {
+        $this->exit_code = $exitCode;   
+    }
+
+    public function set_halt(bool $halt): void 
+    {
+        $this->halt = $halt;
+    }
+
+    public function set_current_order(int $order): void 
+    {
+        $this->currentOrder = $order;
     }
 }

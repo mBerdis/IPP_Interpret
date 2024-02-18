@@ -42,4 +42,9 @@ abstract class AbstractInstruction
         if (!isset($arg) || $arg->get_type() !== $type) 
             throw new OperandTypeException();
     }
+
+    public function get_order(): int 
+    {
+        return $this->order;
+    }
 }
