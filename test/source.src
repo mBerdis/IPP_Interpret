@@ -25,9 +25,6 @@
             ahoj
         </arg1>
     </instruction>
-        <instruction order="50" opcode="WRITE">
-        <arg1 type="bool"> 
-            true
-        </arg1>
+        <instruction order="50" opcode="BREAK">
     </instruction>
 </program>

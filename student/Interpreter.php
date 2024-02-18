@@ -367,6 +367,39 @@ class Interpreter extends AbstractInterpreter
         }
     }
 
+    public function stderr_write(string $msg, string $type): void 
+    {
+        switch ($type) {
+            case "int":
+                $this->stderr->writeInt(intval($msg));
+                break;
+
+            case "nil":
+                $this->stderr->writeString("");
+                break;
+
+            case "bool":
+                if ($msg === "true") 
+                    $this->stderr->writeBool(true);
+                else
+                    $this->stderr->writeBool(false);
+                break;
+
+            case "float":
+                $this->stderr->writeFloat(floatval($msg));
+                break;
+
+            default:
+                // replace escaped seq with corresponding chars
+                $msg = preg_replace_callback('/\\\\(\d{3})/', function ($matches) {
+                    return chr(($matches[1]));
+                }, $msg);
+
+                $this->stderr->writeString($msg);
+                break;
+        }
+    }
+
     public function set_exit_code(int $exitCode): void 
     {
         $this->exit_code = $exitCode;   
@@ -380,6 +413,11 @@ class Interpreter extends AbstractInterpreter
     public function set_current_order(int $order): void 
     {
         $this->currentOrder = $order;
+    }
+
+    public function get_current_order(): int 
+    {
+        return $this->currentOrder;
     }
 
     public function push_call(): void 

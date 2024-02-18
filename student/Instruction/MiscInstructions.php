@@ -83,9 +83,20 @@ class DPRINT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        $arg = $this->args[0];
+
+        if ($arg->is_var())
+        {
+            $frame = $arg->get_frame();
+            $name  = $arg->get_value();
+            $toWrite = self::$interp->get_variable_data($frame, $name);
+        }
+        else 
+        {
+            $toWrite = $arg->get_value();
+        }
+
+        self::$interp->stderr_write($toWrite, $arg->get_type());
     } 
 }
 
@@ -93,8 +104,10 @@ class BREAK_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::$interp->stderr_write("DEBUG INFO: ", "string");
+        self::$interp->stderr_write(" current instruction order: ", "string");
+        
+        $order = self::$interp->get_current_order();
+        self::$interp->stderr_write($order, "int");
     } 
 }
