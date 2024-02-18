@@ -9,16 +9,12 @@ namespace IPP\Student;
 require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use DOMDocument;
-use DOMNode;
 use DOMElement;
-use ArrayIterator;
 use IPP\Core\AbstractInterpreter;
-use IPP\Core\ReturnCode;
 use DOMXpath;
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
-use IPP\Student\Instruction\Move_Inst;
 use IPP\Student\Argument;
 use IPP\Student\Exception\FrameAccessException;
 use IPP\Student\Exception\OperandTypeException;
@@ -233,7 +229,7 @@ class Interpreter extends AbstractInterpreter
         switch ($frame) {
             case "GF":
                 if (!array_key_exists($varName, $this->GF))
-                    throw new VariableAccessException();
+                    throw new VariableAccessException("Undefined variable $varName in GF!");
                 return $this->GF[$varName];
             
             case "TF":

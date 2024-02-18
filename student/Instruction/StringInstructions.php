@@ -22,7 +22,7 @@ class CONCAT_Instruction extends AbstractInstruction
         $data2 = self::get_arg_data($this->args[2]);
         $type2 = self::get_arg_type($this->args[2]);
 
-        if ($type1 !== "string" && $type2 !== "string") 
+        if ($type1 !== "string" || $type2 !== "string") 
             throw new OperandTypeException("CONCAT: Operand type error! Expected string, got $type1 and $type2");
 
         $arg1 = $this->args[0];

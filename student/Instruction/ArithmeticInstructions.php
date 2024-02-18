@@ -145,7 +145,7 @@ class OR_Instruction extends AbstractInstruction
         self::check_arg_type($this->args[2], "bool");
 
         $arg1 = $this->args[0];
-        $val = $this->args[1]->get_value() or $this->args[2]->get_value();
+        $val = self::get_arg_data($this->args[1]) or self::get_arg_data($this->args[2]);
         self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
@@ -155,10 +155,9 @@ class NOT_Instruction extends AbstractInstruction
     public function execute(): void 
     {
         self::check_arg_type($this->args[0], "var");
-        self::check_arg_type($this->args[1], "bool");
-
+        
         $arg1 = $this->args[0];
-        $val = !$this->args[1]->get_value();
+        $val = !self::get_arg_data($this->args[1]);
         self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }
@@ -183,16 +182,8 @@ class STRI2INT_Instruction extends AbstractInstruction
     {
         self::check_arg_type($this->args[0], "var");
 
-        // retrieve values stored in variable
-        if ($this->args[2]->is_var())
-            $pos = self::$interp->get_variable_data($this->args[2]->get_frame(), $this->args[2]->get_value());
-        else 
-            $pos = $this->args[2]->get_value();
-
-        if ($this->args[1]->is_var())
-            $str = self::$interp->get_variable_data($this->args[1]->get_frame(), $this->args[1]->get_value());
-        else 
-            $str = $this->args[1]->get_value();
+        $str = self::get_arg_data($this->args[1]);
+        $pos = self::get_arg_data($this->args[2]);
 
         $arg1 = $this->args[0];
         $val = ord($str[$pos]);
