@@ -48,6 +48,9 @@ class Interpreter extends AbstractInterpreter
     /** @var array<array<string, VariableData>> */
     private array $frameStack;
 
+    /** @var array<int> */
+    private array $callStack;
+
     /** @var array<string, int>  */
     private array $labels;    // name (key) -> instrOrder (value)
 
@@ -62,6 +65,7 @@ class Interpreter extends AbstractInterpreter
         $this->GF           = array();
         $this->labels       = array();
         $this->frameStack   = array();
+        $this->callStack    = array();
     }
 
     /** @param array<int> &$orders */
@@ -173,7 +177,7 @@ class Interpreter extends AbstractInterpreter
         { 
             $this->currentOrder = $instKeys[$i];
             $instructionList[$this->currentOrder]->execute();
-            $i = array_search($this->currentOrder, $instKeys);
+            $i = array_search($this->currentOrder, $instKeys);  // update $i, jump could change $currentOrder
         }
 
         return $this->exit_code;
@@ -376,5 +380,15 @@ class Interpreter extends AbstractInterpreter
     public function set_current_order(int $order): void 
     {
         $this->currentOrder = $order;
+    }
+
+    public function push_call(): void 
+    {
+        array_push($this->callStack, $this->currentOrder);
+    }
+
+    public function pop_call(): int 
+    {
+        return array_pop($this->callStack);
     }
 }

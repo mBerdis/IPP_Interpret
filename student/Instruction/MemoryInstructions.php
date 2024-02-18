@@ -66,9 +66,13 @@ class CALL_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        self::check_arg_type($this->args[0], "label");
+        self::$interp->push_call();
+
+        $label = $this->args[0]->get_value();
+        $order = self::$interp->find_label($label);
+
+        self::$interp->set_current_order($order);
     } 
 }
 
@@ -76,8 +80,7 @@ class RETURN_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
+        $order = self::$interp->pop_call();
+        self::$interp->set_current_order($order);
     } 
 }
