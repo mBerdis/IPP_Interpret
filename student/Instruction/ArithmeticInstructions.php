@@ -214,7 +214,7 @@ class INT2CHAR_Instruction extends AbstractInstruction
         self::check_arg_type($this->args[0], "var");
 
         $arg1 = $this->args[0];
-        $val = chr($this->args[0]->get_value());
+        $val = chr(self::get_arg_data($this->args[1]));
         if ($val === "")
             throw new StringOpException("Wrong INT2CHAR value!");
         self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "string");

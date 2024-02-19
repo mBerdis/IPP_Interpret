@@ -13,11 +13,11 @@ use IPP\Student\DataType;
 
 class Argument
 {
-    private string  $value;
+    private int|string|bool  $value;
     private string  $type;
     private ?string $frame = null;
 
-    public function __construct(string $value, string $type)
+    public function __construct(int|string|bool $value, string $type)
     {
         if ($type === "nil" && $value !== "nil") 
             throw new SemanticException("Wrong nil type!");
@@ -36,7 +36,7 @@ class Argument
         }
     }
 
-    public function get_value(): string
+    public function get_value(): int|string|bool
     {
         return $this->value;
     }

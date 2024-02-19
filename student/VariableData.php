@@ -34,15 +34,15 @@ class VariableData
         {
             case DataType::BOOL:
                 if (!is_bool($value))
-                    throw new OperandValueException("Value is not of type bool");
+                    throw new OperandValueException("Value $value is not of type bool");
                 break;
             case DataType::INT:
                 if (!is_int($value))
-                    throw new OperandValueException("Value is not of type int");
+                    throw new OperandValueException("Value $value is not of type int");
                 break;
             case DataType::STRING:
                 if (!is_string($value))
-                    throw new OperandValueException("Value is not of type string");
+                    throw new OperandValueException("Value $value is not of type string");
                 break;
             default:
                 break;
@@ -63,5 +63,21 @@ class VariableData
     public function get_type(): DataType
     {
         return $this->type;
+    }
+
+    public function get_type_str(): string
+    {
+        switch ($this->type) {
+            case DataType::BOOL:
+                return "bool";
+            case DataType::INT:
+                return "int";
+            case DataType::STRING:
+                return "string";   
+            case DataType::NIL:
+                return "nil";         
+            default:
+                return "";
+        }
     }
 }

@@ -22,6 +22,8 @@ use IPP\Student\Exception\VariableAccessException;
 use IPP\Student\Instruction\AbstractInstruction;
 use IPP\Student\Instruction\InstructionFactory;
 
+use function PHPSTORM_META\type;
+
 class Interpreter extends AbstractInterpreter
 {
     private const OP_CODES = [
@@ -47,6 +49,9 @@ class Interpreter extends AbstractInterpreter
     /** @var array<int> */
     private array $callStack;
 
+    /** @var array<VariableData> */
+    private array $dataStack;
+
     /** @var array<string, int>  */
     private array $labels;    // name (key) -> instrOrder (value)
 
@@ -62,6 +67,7 @@ class Interpreter extends AbstractInterpreter
         $this->labels       = array();
         $this->frameStack   = array();
         $this->callStack    = array();
+        $this->dataStack    = array();
     }
 
     /** @param array<int> &$orders */
@@ -143,6 +149,16 @@ class Interpreter extends AbstractInterpreter
 
             $value = trim($arg->nodeValue);
             $type  = $arg->getAttribute("type");
+            switch ($type) {
+                case "int":
+                    $value = intval($value);
+                    break;
+                case "bool":
+                    $value = boolval($value);
+                    break;
+                default:
+                    break;
+            }
             $args[] = new Argument($value, $type);
         }
 
@@ -449,5 +465,19 @@ class Interpreter extends AbstractInterpreter
     public function pop_call(): int 
     {
         return array_pop($this->callStack);
+    }
+
+    public function push_data(int|string|bool $value, string $type): void 
+    {
+        $storage = new VariableData();
+        $dataType = $this->type_from_str($type);
+        $storage->set_var($value, $dataType);
+        
+        array_push($this->dataStack, $storage);
+    }
+
+    public function pop_data(): VariableData
+    {
+        return array_pop($this->dataStack);
     }
 }

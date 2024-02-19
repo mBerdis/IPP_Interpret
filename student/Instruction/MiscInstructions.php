@@ -11,26 +11,6 @@ use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 
-class PUSHS_Instruction extends AbstractInstruction
-{
-    public function execute(): void 
-    {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
-    } 
-}
-
-class POPS_Instruction extends AbstractInstruction
-{
-    public function execute(): void 
-    {
-        //echo($this->args[0]->get_value());
-        //echo($this->args[1]->get_value());
-        echo("MOVE instruction %d\n");
-    } 
-}
-
 class READ_Instruction extends AbstractInstruction
 {
     public function execute(): void 

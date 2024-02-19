@@ -11,6 +11,7 @@ require_once '/ipp-php/student/Instruction/FlowInstructions.php';
 require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 require_once '/ipp-php/student/Instruction/MiscInstructions.php';
 require_once '/ipp-php/student/Instruction/StringInstructions.php';
+require_once '/ipp-php/student/Instruction/DataStackInstructions.php';
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Argument;
 
