@@ -371,11 +371,11 @@ class Interpreter extends AbstractInterpreter
         }
     }
 
-    public function stdout_write(string $msg, string $type): void 
+    public function stdout_write(int|string|bool $msg, string $type): void 
     {
         switch ($type) {
             case "int":
-                $this->stdout->writeInt(intval($msg));
+                $this->stdout->writeInt($msg);
                 break;
 
             case "nil":
@@ -383,10 +383,7 @@ class Interpreter extends AbstractInterpreter
                 break;
 
             case "bool":
-                if ($msg === "true") 
-                    $this->stdout->writeBool(true);
-                else
-                    $this->stdout->writeBool(false);
+                $this->stdout->writeBool($msg);
                 break;
 
             case "float":
