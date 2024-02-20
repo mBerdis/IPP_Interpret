@@ -6,9 +6,6 @@
 
 namespace IPP\Student\Instruction;
 
-use IPP\Student\DataType;
-use IPP\Student\Exception\OperandTypeException;
-use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 
 class READ_Instruction extends AbstractInstruction

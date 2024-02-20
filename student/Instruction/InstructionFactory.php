@@ -17,6 +17,7 @@ use IPP\Student\Argument;
 
 class InstructionFactory
 {
+    // maps opCode to correct AbstractInstructions`s child
     /** @var array<string, string>  */
     private static array $INST_CLASSES = [
         // Work with memory frames

@@ -6,7 +6,7 @@
 
 namespace IPP\Student\Instruction;
 
-use IPP\Student\Exception\SemanticException;
+use IPP\Student\Argument;
 use IPP\Student\Instruction\AbstractInstruction;
 use IPP\Student\Exception\OperandValueException;
 use IPP\Student\Exception\OperandTypeException;
@@ -18,6 +18,7 @@ class LABEL_Instruction extends AbstractInstruction
     {
         parent::__construct($order, $opCode, $args);
 
+        // add label to array, this is in constructor because it needs to be done only once!
         self::check_arg_type($this->args[0], "label");
     
         $label = $this->args[0]->get_value();
@@ -26,6 +27,7 @@ class LABEL_Instruction extends AbstractInstruction
 
     public function execute(): void 
     {
+        // NOP
         return;
     } 
 }

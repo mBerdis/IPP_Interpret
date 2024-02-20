@@ -7,10 +7,9 @@
 namespace IPP\Student\Instruction;
 
 require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
-use IPP\Student\Constants;
 use IPP\Student\Argument;
-use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Interpreter;
+use IPP\Student\Exception\OperandTypeException;
 
 abstract class AbstractInstruction
 {

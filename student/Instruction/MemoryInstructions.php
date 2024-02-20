@@ -6,7 +6,6 @@
 
 namespace IPP\Student\Instruction;
 
-use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Instruction\AbstractInstruction;
 
 class MOVE_Instruction extends AbstractInstruction

@@ -29,4 +29,7 @@ clean:
 	$(RM) -r $(TEMP_DIR)
 
 run:
-	if [ "${HOSTNAME}" = "merlin.fit.vutbr.cz" ]; then php8.3 $(SCRIPT) --help; else php $(SCRIPT) --source=test/source.src --input=test/input.src; fi
+	if [ "${HOSTNAME}" = "merlin.fit.vutbr.cz" ]; then php8.3 $(SCRIPT) --help; else php $(SCRIPT) --source=test/read_test.src --input=test/read_test.src; fi
+
+runTest:
+	./test-int.py

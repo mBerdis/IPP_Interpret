@@ -10,22 +10,21 @@ require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use DOMDocument;
 use DOMElement;
-use IPP\Core\AbstractInterpreter;
 use DOMXpath;
+use IPP\Core\AbstractInterpreter;
 use IPP\Core\Exception\XMLException;
+use IPP\Student\Argument;
 use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
-use IPP\Student\Argument;
 use IPP\Student\Exception\FrameAccessException;
 use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\VariableAccessException;
 use IPP\Student\Instruction\AbstractInstruction;
 use IPP\Student\Instruction\InstructionFactory;
 
-use function PHPSTORM_META\type;
-
 class Interpreter extends AbstractInterpreter
 {
+    // array of opcodes used for validation
     private const OP_CODES = [
         "MOVE", "CREATEFRAME", "PUSHFRAME", "POPFRAME", "DEFVAR", "CALL",
         "RETURN", "PUSHS", "POPS", "ADD", "SUB", "MUL", "IDIV", "LT", 
@@ -34,7 +33,7 @@ class Interpreter extends AbstractInterpreter
         "JUMP", "JUMPIFEQ", "JUMPIFNEQ", "EXIT", "DPRINT", "BREAK"
     ];
 
-    private const array ARG_TYPES  = ["var", "symb", "label", "type", "bool", "string", "int"];
+    private const array ARG_TYPES  = ["var", "symb", "label", "type", "bool", "string", "int", "nil"];
     private const string ARG_REGEX = "/arg[1-9]+[0-9]*/";
 
     /** @var array<string, VariableData>  */
@@ -55,9 +54,9 @@ class Interpreter extends AbstractInterpreter
     /** @var array<string, int>  */
     private array $labels;    // name (key) -> instrOrder (value)
 
-    private int  $exit_code     = 0; // set by EXIT instruction
-    private bool $halt          = false;
-    private int  $currentOrder  = 0;
+    private int  $exit_code     = 0;        // set by EXIT instruction
+    private bool $halt          = false;    // will stop interpreting when true
+    private int  $currentOrder;             // used for flow control of the interpreted program
 
     protected function init(): void
     {
@@ -120,7 +119,6 @@ class Interpreter extends AbstractInterpreter
                 $this->validate_arg_node($arg);
             }
         }
-
         // if program is here, nodes are valid.
 
         // sort instructions
@@ -138,6 +136,7 @@ class Interpreter extends AbstractInterpreter
             $dom->documentElement->appendChild($instruction);
     }
 
+    /** @return array<Argument> */
     private function get_args(DOMElement &$instruction): array 
     {
         $args = array();
@@ -148,18 +147,21 @@ class Interpreter extends AbstractInterpreter
                 continue;
 
             $value = trim($arg->nodeValue);
-            $type  = $arg->getAttribute("type");
-            switch ($type) {
-                case "int":
-                    $value = intval($value);
-                    break;
-                case "bool":
-                    $value = boolval($value);
-                    break;
-                default:
-                    break;
+            if ($arg instanceof DOMElement) 
+            {
+                $type  = $arg->getAttribute("type");
+                switch ($type) {
+                    case "int":
+                        $value = intval($value);
+                        break;
+                    case "bool":
+                        $value = boolval($value);
+                        break;
+                    default:
+                        break;
+                }
+                $args[] = new Argument($value, $type);
             }
-            $args[] = new Argument($value, $type);
         }
 
         return $args;
@@ -173,19 +175,25 @@ class Interpreter extends AbstractInterpreter
         $this->validate_xml_attrs($dom, $xpath);
 
         $instructions = iterator_to_array($xpath->evaluate('/program/instruction'));
+
+        // set reference so Instructions can call Interpret`s methods
         AbstractInstruction::setInterpreter($this);
 
         $instructionList = array();
+
+        // parse xml into Instruction objects
         foreach ($instructions as $instruction) {
             $opCode = strtoupper($instruction->getAttribute("opcode"));
             $order  = $instruction->getAttribute("order");
             $args   = $this->get_args($instruction);
+            // instruction factory will return constructed child of AbstractInstruction based on the opCode given.
             $instructionList[$order] = InstructionFactory::create_Instruction($order, $opCode, $args);
         }
 
+        // array of instruction orders, orders are in non-descending order. They dont have to be evenly spaced!
         $instKeys = array_keys($instructionList);
 
-        for ($i = 0; ($i < count($instKeys)) && !$this->halt; $i++) 
+        for ($i = 0; ($i < count($instKeys)) && !$this->halt; $i++)     // i is used for getting correct order
         { 
             $this->currentOrder = $instKeys[$i];
             $instructionList[$this->currentOrder]->execute();
@@ -393,7 +401,7 @@ class Interpreter extends AbstractInterpreter
             default:
                 // replace escaped seq with corresponding chars
                 $msg = preg_replace_callback('/\\\\(\d{3})/', function ($matches) {
-                    return chr(($matches[1]));
+                    return chr(intval($matches[1]));
                 }, $msg);
 
                 $this->stdout->writeString($msg);
@@ -401,11 +409,11 @@ class Interpreter extends AbstractInterpreter
         }
     }
 
-    public function stderr_write(string $msg, string $type): void 
+    public function stderr_write(int|string|bool $msg, string $type): void 
     {
         switch ($type) {
             case "int":
-                $this->stderr->writeInt(intval($msg));
+                $this->stderr->writeInt($msg);
                 break;
 
             case "nil":
@@ -413,11 +421,7 @@ class Interpreter extends AbstractInterpreter
                 break;
 
             case "bool":
-                if ($msg === "true") 
-                    $this->stderr->writeBool(true);
-                else
-                    $this->stderr->writeBool(false);
-                break;
+                $this->stderr->writeBool($msg);
 
             case "float":
                 $this->stderr->writeFloat(floatval($msg));
@@ -426,7 +430,7 @@ class Interpreter extends AbstractInterpreter
             default:
                 // replace escaped seq with corresponding chars
                 $msg = preg_replace_callback('/\\\\(\d{3})/', function ($matches) {
-                    return chr(($matches[1]));
+                    return chr(intval($matches[1]));
                 }, $msg);
 
                 $this->stderr->writeString($msg);

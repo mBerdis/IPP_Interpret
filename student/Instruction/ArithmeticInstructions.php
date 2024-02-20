@@ -6,11 +6,9 @@
 
 namespace IPP\Student\Instruction;
 
-use IPP\Student\Exception\SemanticException;
 use IPP\Student\Instruction\AbstractInstruction;
 use IPP\Student\Exception\OperandValueException;
 use IPP\Student\Exception\OperandTypeException;
-use IPP\Student\Exception\StringOpException;
 
 class ADD_Instruction extends AbstractInstruction
 {
@@ -215,8 +213,6 @@ class INT2CHAR_Instruction extends AbstractInstruction
 
         $arg1 = $this->args[0];
         $val = chr(self::get_arg_data($this->args[1]));
-        if ($val === "")
-            throw new StringOpException("Wrong INT2CHAR value!");
         self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "string");
     } 
 }
