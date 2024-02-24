@@ -11,8 +11,8 @@ use IPP\Core\Exception\IPPException;
 use Throwable;
 
 /**
- * Exception for invalid command-line parameters
- */
+ * Exception for invalid xml structure
+ */ 
 class SourceStructureException extends IPPException
 {
     public function __construct(string $message = "Invalid source structure!", ?Throwable $previous = null)

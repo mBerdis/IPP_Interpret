@@ -174,29 +174,29 @@ class Interpreter extends AbstractInterpreter
 
         $this->validate_xml_attrs($dom, $xpath);
 
-        $instructions = iterator_to_array($xpath->evaluate('/program/instruction'));
+        $xmlInstructions = iterator_to_array($xpath->evaluate('/program/instruction'));
 
         // set reference so Instructions can call Interpret`s methods
         AbstractInstruction::setInterpreter($this);
 
-        $instructionList = array();
+        $instructions = array();
 
         // parse xml into Instruction objects
-        foreach ($instructions as $instruction) {
-            $opCode = strtoupper($instruction->getAttribute("opcode"));
-            $order  = $instruction->getAttribute("order");
-            $args   = $this->get_args($instruction);
+        foreach ($xmlInstructions as $instructionNode) {
+            $opCode = strtoupper($instructionNode->getAttribute("opcode"));
+            $order  = $instructionNode->getAttribute("order");
+            $args   = $this->get_args($instructionNode);
             // instruction factory will return constructed child of AbstractInstruction based on the opCode given.
-            $instructionList[$order] = InstructionFactory::create_Instruction($order, $opCode, $args);
+            $instructions[$order] = InstructionFactory::create_Instruction($order, $opCode, $args);
         }
 
         // array of instruction orders, orders are in non-descending order. They dont have to be evenly spaced!
-        $instKeys = array_keys($instructionList);
+        $instKeys = array_keys($instructions);
 
         for ($i = 0; ($i < count($instKeys)) && !$this->halt; $i++)     // i is used for getting correct order
         { 
             $this->currentOrder = $instKeys[$i];
-            $instructionList[$this->currentOrder]->execute();
+            $instructions[$this->currentOrder]->execute();
             $i = array_search($this->currentOrder, $instKeys);  // update $i, jump could change $currentOrder
         }
 
