@@ -24,13 +24,17 @@ use IPP\Student\Instruction\InstructionFactory;
 
 class Interpreter extends AbstractInterpreter
 {
-    // array of opcodes used for validation
+    // array of opcodes and their argument count used for validation
+    /** @var array<string, int>  */
     private const OP_CODES = [
-        "MOVE", "CREATEFRAME", "PUSHFRAME", "POPFRAME", "DEFVAR", "CALL",
-        "RETURN", "PUSHS", "POPS", "ADD", "SUB", "MUL", "IDIV", "LT", 
-        "GT", "EQ", "AND", "OR", "NOT", "INT2CHAR", "STRI2INT", "READ", 
-        "WRITE", "CONCAT", "STRLEN", "GETCHAR", "SETCHAR", "TYPE", "LABEL", 
-        "JUMP", "JUMPIFEQ", "JUMPIFNEQ", "EXIT", "DPRINT", "BREAK"
+        "MOVE" => 2, "CREATEFRAME" => 0, "PUSHFRAME" => 0, "POPFRAME" => 0,
+        "DEFVAR" => 1, "CALL" => 1, "RETURN" => 0, "PUSHS" => 1, "POPS" => 1,
+        "ADD" => 3, "SUB" => 3, "MUL" => 3, "IDIV" => 3, "LT" => 3, 
+        "GT" => 3, "EQ" => 3, "AND" => 3, "OR" => 3, "NOT" => 2, 
+        "INT2CHAR" => 2, "STRI2INT" => 3, "READ" => 2, "WRITE" => 1, 
+        "CONCAT" => 3, "STRLEN" => 2, "GETCHAR" => 3, "SETCHAR" => 3, 
+        "TYPE" => 2, "LABEL" => 1, "JUMP" => 1, "JUMPIFEQ" => 3, 
+        "JUMPIFNEQ" => 3, "EXIT" => 1, "DPRINT" => 1, "BREAK" => 0
     ];
 
     private const array ARG_TYPES  = ["var", "symb", "label", "type", "bool", "string", "int", "nil"];
@@ -75,11 +79,14 @@ class Interpreter extends AbstractInterpreter
         if ($node->nodeName !== "instruction")
             throw new SourceStructureException("Expected instruction node!");
 
-        if (!in_array(strtoupper($node->getAttribute("opcode")), $this::OP_CODES))
-            throw new XMLException("Unknown opcode!");
+        if (!array_key_exists(strtoupper($node->getAttribute("opcode")), $this::OP_CODES))
+            throw new SourceStructureException("Unknown opcode!");
+
+        if ($node->getAttribute("order") === null || !is_numeric($node->getAttribute("order")))
+            throw new SourceStructureException("Wrong instruction order!");
 
         $order = intval($node->getAttribute("order")); // Cast to integer
-        if ($order < 0)
+        if ($order <= 0)
             throw new SourceStructureException("Negative instruction order!");
 
         if (in_array($order, $orders))
@@ -89,8 +96,11 @@ class Interpreter extends AbstractInterpreter
         $orders[] = $order;
     }
 
-    private function validate_arg_node(DOMElement &$arg): void
+    private function validate_arg_node(DOMElement &$arg, int $i): void
     {
+        if ($arg->nodeName !== "arg$i")
+            throw new SourceStructureException("Invalid argument number!");
+    
         if (!preg_match(self::ARG_REGEX, $arg->nodeName))
             throw new SourceStructureException("Expected arg node!");
 
@@ -100,8 +110,11 @@ class Interpreter extends AbstractInterpreter
 
     private function validate_xml_attrs(DOMDocument &$dom, DOMXpath &$xpath): void
     {
+        if ($dom->documentElement->nodeName !== "program")
+            throw new SourceStructureException("Wrong root node!");
+
         if ($dom->documentElement->getAttribute("language") != "IPPcode24")
-            throw new XMLException("Wrong language attribute of program!");
+            throw new SourceStructureException("Wrong language attribute of program!");
 
         $childrenNodes = $dom->documentElement->childNodes;
         $orders = [];
@@ -112,11 +125,25 @@ class Interpreter extends AbstractInterpreter
             if ($node->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
                 continue;
             $this->validate_instruction_node($node, $orders);
-            foreach ($node->childNodes as $arg)
+            
+            // sort arguments
+            $args = iterator_to_array($node->childNodes);
+            usort($args, static function($a, $b) {
+                $orderA = intval(substr($a->nodeName, 3)); // Extract numeric part of nodeName
+                $orderB = intval(substr($b->nodeName, 3)); // Extract numeric part of nodeName
+              
+                if ($orderA === $orderB) return 0;
+                return ($orderA < $orderB) ? -1 : 1;
+            });
+
+            $i = 1;
+            foreach ($args as $arg)
             {
                 if ($arg->nodeType !== XML_ELEMENT_NODE)   # skip #text nodes
                     continue;
-                $this->validate_arg_node($arg);
+                $this->validate_arg_node($arg, $i);
+                $i++;
+                $node->appendChild($arg);
             }
         }
         // if program is here, nodes are valid.
@@ -137,7 +164,7 @@ class Interpreter extends AbstractInterpreter
     }
 
     /** @return array<Argument> */
-    private function get_args(DOMElement &$instruction): array 
+    private function get_args(DOMElement &$instruction, string $opCode): array 
     {
         $args = array();
 
@@ -152,6 +179,9 @@ class Interpreter extends AbstractInterpreter
                 $type  = $arg->getAttribute("type");
                 switch ($type) {
                     case "int":
+                        if (!is_numeric($value))
+                            throw new SourceStructureException("Invalid int argument!");
+                    
                         $value = intval($value);
                         break;
                     case "bool":
@@ -163,6 +193,9 @@ class Interpreter extends AbstractInterpreter
                 $args[] = new Argument($value, $type);
             }
         }
+
+        if (self::OP_CODES[$opCode] !== count($args))
+            throw new SourceStructureException("Wrong argument count for $opCode!");
 
         return $args;
     }
@@ -185,7 +218,7 @@ class Interpreter extends AbstractInterpreter
         foreach ($xmlInstructions as $instructionNode) {
             $opCode = strtoupper($instructionNode->getAttribute("opcode"));
             $order  = $instructionNode->getAttribute("order");
-            $args   = $this->get_args($instructionNode);
+            $args   = $this->get_args($instructionNode, $opCode);
             // instruction factory will return constructed child of AbstractInstruction based on the opCode given.
             $instructions[$order] = InstructionFactory::create_Instruction($order, $opCode, $args);
         }
@@ -205,6 +238,9 @@ class Interpreter extends AbstractInterpreter
 
     public function add_label(string $label, int $instrOrder): void
     {
+        if (array_key_exists($label, $this->labels))
+            throw new SemanticException("Duplicate label!");
+
         $this->labels[$label] = $instrOrder;
     }
 
@@ -226,7 +262,7 @@ class Interpreter extends AbstractInterpreter
                 break;
             
             case "TF":
-                if (!$this->TF)
+                if ($this->TF === null)
                     throw new FrameAccessException("TF does not exist!");
                 if (array_key_exists($varName, $this->TF))
                     throw new SemanticException("Variable $varName redefinition!");
@@ -351,6 +387,9 @@ class Interpreter extends AbstractInterpreter
 
     public function push_frame(): void
     {
+        if ($this->TF === null) 
+            throw new FrameAccessException("Trying to push null frame!");
+
         array_push($this->frameStack, $this->TF);
         $this->TF = NULL;
     }

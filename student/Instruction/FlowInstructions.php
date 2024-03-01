@@ -101,7 +101,7 @@ class EXIT_Instruction extends AbstractInstruction
 {
     public function execute(): void 
     {
-        $val = self::get_arg_data($this->args[1]);
+        $val = self::get_arg_data($this->args[0]);
         
         if ($val < 0 || $val > 9) 
             throw new OperandValueException("Wrong operand value for EXIT!");
