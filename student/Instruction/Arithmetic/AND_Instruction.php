@@ -21,7 +21,7 @@ class AND_Instruction extends AbstractInstruction
             throw new OperandTypeException("AND: Operand type error! Expected bool, got $type1 and $type2");
 
         $arg1 = $this->args[0];
-        $val = self::get_arg_data($this->args[1]) and self::get_arg_data($this->args[2]);
+        $val = self::get_arg_data($this->args[1]) && self::get_arg_data($this->args[2]);
         self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }

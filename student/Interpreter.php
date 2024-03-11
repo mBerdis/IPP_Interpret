@@ -290,7 +290,7 @@ class Interpreter extends AbstractInterpreter
                 return $this->GF[$varName];
             
             case "TF":
-                if (!$this->TF)
+                if (is_null($this->TF))
                     throw new FrameAccessException("TF does not exist!");
                 if (!array_key_exists($varName, $this->TF))
                     throw new VariableAccessException("Variable $varName doesnt exist in TF!");

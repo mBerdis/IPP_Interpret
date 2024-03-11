@@ -33,3 +33,8 @@ run:
 
 runTest:
 	./test-int.py
+
+runLongTests:
+	cd long-tests/ && \
+	php test.php --directory=TESTS_2024/both --recursive --output=OUT.html --threads=8 && \
+	cd ..

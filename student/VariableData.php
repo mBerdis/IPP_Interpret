@@ -9,15 +9,6 @@ namespace IPP\Student;
 use IPP\Student\Exception\OperandValueException;
 use IPP\Student\Exception\ValueException;
 
-enum DataType
-{
-    case INT;
-    case STRING;
-    case BOOL;
-    case UNDEFINED;
-    case NIL;
-};
-
 class VariableData
 {
     private int|string|bool|null $value = null;
