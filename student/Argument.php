@@ -6,7 +6,6 @@
 
 namespace IPP\Student;
 
-require_once '/ipp-php/student/VariableData.php';
 use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\SemanticException;
 

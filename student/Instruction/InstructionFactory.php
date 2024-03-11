@@ -6,11 +6,6 @@
 
 namespace IPP\Student\Instruction;
 
-require_once '/ipp-php/student/Instruction/FlowInstructions.php';
-require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
-require_once '/ipp-php/student/Instruction/MiscInstructions.php';
-require_once '/ipp-php/student/Instruction/StringInstructions.php';
-require_once '/ipp-php/student/Instruction/DataStackInstructions.php';
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Argument;
 
@@ -20,17 +15,17 @@ class InstructionFactory
     /** @var array<string, string>  */
     private static array $INST_CLASSES = [
         // Work with memory frames
-        "MOVE"          => MOVE_Instruction::class,
-        "CREATEFRAME"   => CREATEFRAME_Instruction::class,
-        "PUSHFRAME"     => PUSHFRAME_Instruction::class,
-        "POPFRAME"      => POPFRAME_Instruction::class,
-        "DEFVAR"        => DEFVAR_Instruction::class,
-        "CALL"          => CALL_Instruction::class,
-        "RETURN"        => RETURN_Instruction::class,
+        "MOVE"          => \IPP\Student\Instruction\Memory\MOVE_Instruction::class,
+        "CREATEFRAME"   => \IPP\Student\Instruction\Memory\CREATEFRAME_Instruction::class,
+        "PUSHFRAME"     => \IPP\Student\Instruction\Memory\PUSHFRAME_Instruction::class,
+        "POPFRAME"      => \IPP\Student\Instruction\Memory\POPFRAME_Instruction::class,
+        "DEFVAR"        => \IPP\Student\Instruction\Memory\DEFVAR_Instruction::class,
+        "CALL"          => \IPP\Student\Instruction\Memory\CALL_Instruction::class,
+        "RETURN"        => \IPP\Student\Instruction\Memory\RETURN_Instruction::class,
     
         // Data stack
-        "PUSHS"         => PUSHS_Instruction::class,
-        "POPS"          => POPS_Instruction::class,
+        "PUSHS"         => \IPP\Student\Instruction\DataStack\PUSHS_Instruction::class,
+        "POPS"          => \IPP\Student\Instruction\DataStack\POPS_Instruction::class,
     
         // Arithmetic
         "ADD"           => \IPP\Student\Instruction\Arithmetic\ADD_Instruction::class,
@@ -47,28 +42,28 @@ class InstructionFactory
         "STRI2INT"      => \IPP\Student\Instruction\Arithmetic\STRI2INT_Instruction::class,
     
         // I/O
-        "READ"          => READ_Instruction::class,
-        "WRITE"         => WRITE_Instruction::class,
+        "READ"          => \IPP\Student\Instruction\Misc\READ_Instruction::class,
+        "WRITE"         => \IPP\Student\Instruction\Misc\WRITE_Instruction::class,
     
         // Strings
-        "CONCAT"        => CONCAT_Instruction::class,
-        "STRLEN"        => STRLEN_Instruction::class,
-        "GETCHAR"       => GETCHAR_Instruction::class,
-        "SETCHAR"       => SETCHAR_Instruction::class,
+        "CONCAT"        => \IPP\Student\Instruction\String\CONCAT_Instruction::class,
+        "STRLEN"        => \IPP\Student\Instruction\String\STRLEN_Instruction::class,
+        "GETCHAR"       => \IPP\Student\Instruction\String\GETCHAR_Instruction::class,
+        "SETCHAR"       => \IPP\Student\Instruction\String\SETCHAR_Instruction::class,
     
         // Type
-        "TYPE"          => TYPE_Instruction::class,
+        "TYPE"          => \IPP\Student\Instruction\Misc\TYPE_Instruction::class,
     
         // Flow control
-        "LABEL"         => LABEL_Instruction::class,
-        "JUMP"          => JUMP_Instruction::class,
-        "JUMPIFEQ"      => JUMPIFEQ_Instruction::class,
-        "JUMPIFNEQ"     => JUMPIFNEQ_Instruction::class,
-        "EXIT"          => EXIT_Instruction::class,
+        "LABEL"         => \IPP\Student\Instruction\Flow\LABEL_Instruction::class,
+        "JUMP"          => \IPP\Student\Instruction\Flow\JUMP_Instruction::class,
+        "JUMPIFEQ"      => \IPP\Student\Instruction\Flow\JUMPIFEQ_Instruction::class,
+        "JUMPIFNEQ"     => \IPP\Student\Instruction\Flow\JUMPIFNEQ_Instruction::class,
+        "EXIT"          => \IPP\Student\Instruction\Flow\EXIT_Instruction::class,
     
         // Debug
-        "DPRINT"        => DPRINT_Instruction::class,
-        "BREAK"         => BREAK_Instruction::class
+        "DPRINT"        => \IPP\Student\Instruction\Misc\DPRINT_Instruction::class,
+        "BREAK"         => \IPP\Student\Instruction\Misc\BREAK_Instruction::class
     ];
 
     /** @param array<Argument> $args */

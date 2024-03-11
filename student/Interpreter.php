@@ -6,13 +6,11 @@
 
 namespace IPP\Student;
 
-require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 use DOMDocument;
 use DOMElement;
 use DOMXpath;
 use IPP\Core\AbstractInterpreter;
 use IPP\Core\Exception\XMLException;
-use IPP\Student\Argument;
 use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
 use IPP\Student\Exception\FrameAccessException;
