@@ -6,7 +6,6 @@
 
 namespace IPP\Student\Instruction;
 
-require_once '/ipp-php/student/Instruction/ArithmeticInstructions.php';
 require_once '/ipp-php/student/Instruction/FlowInstructions.php';
 require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
 require_once '/ipp-php/student/Instruction/MiscInstructions.php';
@@ -34,18 +33,18 @@ class InstructionFactory
         "POPS"          => POPS_Instruction::class,
     
         // Arithmetic
-        "ADD"           => ADD_Instruction::class,
-        "SUB"           => SUB_Instruction::class,
-        "MUL"           => MUL_Instruction::class,
-        "IDIV"          => IDIV_Instruction::class,
-        "LT"            => LT_Instruction::class,
-        "GT"            => GT_Instruction::class,
-        "EQ"            => EQ_Instruction::class,
-        "AND"           => AND_Instruction::class,
-        "OR"            => OR_Instruction::class,
-        "NOT"           => NOT_Instruction::class,
-        "INT2CHAR"      => INT2CHAR_Instruction::class,
-        "STRI2INT"      => STRI2INT_Instruction::class,
+        "ADD"           => \IPP\Student\Instruction\Arithmetic\ADD_Instruction::class,
+        "SUB"           => \IPP\Student\Instruction\Arithmetic\SUB_Instruction::class,
+        "MUL"           => \IPP\Student\Instruction\Arithmetic\MUL_Instruction::class,
+        "IDIV"          => \IPP\Student\Instruction\Arithmetic\IDIV_Instruction::class,
+        "LT"            => \IPP\Student\Instruction\Arithmetic\LT_Instruction::class,
+        "GT"            => \IPP\Student\Instruction\Arithmetic\GT_Instruction::class,
+        "EQ"            => \IPP\Student\Instruction\Arithmetic\EQ_Instruction::class,
+        "AND"           => \IPP\Student\Instruction\Arithmetic\AND_Instruction::class,
+        "OR"            => \IPP\Student\Instruction\Arithmetic\OR_Instruction::class,
+        "NOT"           => \IPP\Student\Instruction\Arithmetic\NOT_Instruction::class,
+        "INT2CHAR"      => \IPP\Student\Instruction\Arithmetic\INT2CHAR_Instruction::class,
+        "STRI2INT"      => \IPP\Student\Instruction\Arithmetic\STRI2INT_Instruction::class,
     
         // I/O
         "READ"          => READ_Instruction::class,

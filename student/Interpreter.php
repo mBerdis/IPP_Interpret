@@ -7,7 +7,6 @@
 namespace IPP\Student;
 
 require_once '/ipp-php/student/Instruction/MemoryInstructions.php';
-require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use DOMDocument;
 use DOMElement;
 use DOMXpath;

@@ -6,7 +6,6 @@
 
 namespace IPP\Student\Instruction;
 
-require_once '/ipp-php/student/Exception/IntrepreterExceptions.php';
 use IPP\Student\Argument;
 use IPP\Student\Interpreter;
 use IPP\Student\Exception\OperandTypeException;
