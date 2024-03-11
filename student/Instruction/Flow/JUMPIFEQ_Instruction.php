@@ -13,6 +13,8 @@ class JUMPIFEQ_Instruction extends AbstractInstruction
     public function execute(): void 
     {
         self::check_arg_type($this->args[0], "label");
+        $label = $this->args[0]->get_value();
+        $order = self::$interp->find_label($label);
 
         if ($this->args[1]->is_nil() || $this->args[2]->is_nil())
             throw new OperandTypeException("JUMPIFEQ nil operand type!");
@@ -26,10 +28,6 @@ class JUMPIFEQ_Instruction extends AbstractInstruction
             throw new OperandTypeException("JUMPIFEQ operand type mismatch! $type1 !== $type2");
 
         if ($data1 === $data2)
-        {
-            $label = $this->args[0]->get_value();
-            $order = self::$interp->find_label($label);
             self::$interp->set_current_order($order);
-        }
     } 
 }

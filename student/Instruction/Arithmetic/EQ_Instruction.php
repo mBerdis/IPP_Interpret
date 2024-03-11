@@ -14,14 +14,24 @@ class EQ_Instruction extends AbstractInstruction
     {
         self::check_arg_type($this->args[0], "var");
 
+        $arg1 = $this->args[0];
         $type1 = self::get_arg_type($this->args[1]);
         $type2 = self::get_arg_type($this->args[2]);
 
         if ($type1 !== $type2) 
-            throw new OperandTypeException("EQ operand type mismatch! $type1 and $type2");
+        {
+            if ($type1 === "nil" || $type2 === "nil")
+            {
+                self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), false, "bool");
+                return;
+            }
 
-        $arg1 = $this->args[0];
-        $val = self::get_arg_data($this->args[1]) === self::get_arg_data($this->args[2]);
+            throw new OperandTypeException("EQ operand type mismatch! $type1 and $type2");
+        }
+
+        $data1 = self::get_arg_data($this->args[1]);
+        $data2 = self::get_arg_data($this->args[2]);
+        $val = $data1 === $data2;
         self::$interp->update_variable($arg1->get_frame(), $arg1->get_value(), $val, "bool");
     } 
 }

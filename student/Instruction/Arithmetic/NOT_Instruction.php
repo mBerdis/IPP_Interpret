@@ -14,7 +14,7 @@ class NOT_Instruction extends AbstractInstruction
     {
         self::check_arg_type($this->args[0], "var");
 
-        $type = self::get_arg_type($this->args[2]);
+        $type = self::get_arg_type($this->args[1]);
         if ($type !== "bool") 
             throw new OperandTypeException("OR: Operand type error! Expected bool, got $type");
         

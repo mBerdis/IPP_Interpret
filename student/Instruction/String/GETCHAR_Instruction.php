@@ -24,7 +24,7 @@ class GETCHAR_Instruction extends AbstractInstruction
         if ($type1 !== "string" || $type2 !== "int") 
             throw new OperandTypeException("GETCHAR: Operand type error! Expected string and int, got $type1 and $type2");
         
-        if (!isset($str[$index]))
+        if (!isset($str[$index]) || $index < 0)
             throw new StringOpException("GETCHAR: index out of bounds!");
 
         $arg1 = $this->args[0];

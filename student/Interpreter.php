@@ -13,6 +13,7 @@ use IPP\Core\AbstractInterpreter;
 use IPP\Core\Exception\XMLException;
 use IPP\Student\Exception\SourceStructureException;
 use IPP\Student\Exception\SemanticException;
+use IPP\Student\Exception\ValueException;
 use IPP\Student\Exception\FrameAccessException;
 use IPP\Student\Exception\OperandTypeException;
 use IPP\Student\Exception\VariableAccessException;
@@ -182,7 +183,12 @@ class Interpreter extends AbstractInterpreter
                         $value = intval($value);
                         break;
                     case "bool":
-                        $value = boolval($value);
+                        if ($value === "true") 
+                            $value = true;
+                        elseif ($value === "false")
+                            $value = false;
+                        else
+                            throw new SourceStructureException("Invalid bool argument!");
                         break;
                     default:
                         break;
@@ -270,7 +276,10 @@ class Interpreter extends AbstractInterpreter
                 if (empty($this->frameStack))
                     throw new FrameAccessException("LF does not exist!");
 
-                $LF = end($this->frameStack);
+                // Get a reference to the last element of frameStack
+                $LFindex = count($this->frameStack) - 1;
+                $LF =& $this->frameStack[$LFindex];
+
                 if (array_key_exists($varName, $LF))
                     throw new SemanticException("Variable $varName redefinition!");
                 $LF[$varName] = new VariableData();
@@ -335,6 +344,7 @@ class Interpreter extends AbstractInterpreter
                 break;
 
             default:
+                throw new ValueException("Tried to get undefined variable type of: $varName");
                 $type = "";
                 break;
         }
@@ -501,6 +511,9 @@ class Interpreter extends AbstractInterpreter
 
     public function pop_call(): int 
     {
+        if (!end($this->callStack))
+            throw new ValueException("Trying to pop non-existing call frame!");
+
         return array_pop($this->callStack);
     }
 
@@ -515,6 +528,9 @@ class Interpreter extends AbstractInterpreter
 
     public function pop_data(): VariableData
     {
+        if (!end($this->dataStack))
+            throw new ValueException("Trying to pop non-existing data frame!");
+
         return array_pop($this->dataStack);
     }
 }

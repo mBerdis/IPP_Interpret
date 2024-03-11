@@ -32,6 +32,13 @@ class Argument
             $this->frame = $splitted[0];
             $this->value = $splitted[1];
         }
+        if ($type === "string") 
+        {
+            // replace escaped seq with corresponding chars
+            $this->value = preg_replace_callback('/\\\\(\d{3})/', function ($matches) {
+                return chr(intval($matches[1]));
+            }, $this->value);
+        }
     }
 
     public function get_value(): int|string|bool
