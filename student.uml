@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>D:/Projects/VUT_FIT/IPP/IPP_Interpret/student</OriginalElement>
+  <nodes>
+    <node x="660.0" y="316.0">\IPP\Student\Instruction\Misc\WRITE_Instruction</node>
+    <node x="337.9215810276681" y="1052.2525988142293">\Throwable</node>
+    <node x="95.0" y="84.0">\IPP\Student\Instruction\Arithmetic\SUB_Instruction</node>
+    <node x="494.0284584980237" y="702.8510177865612">\IPP\Core\AbstractInterpreter</node>
+    <node x="581.0" y="84.0">\IPP\Student\Instruction\Arithmetic\GT_Instruction</node>
+    <node x="743.5158102766798" y="939.6722826086959">\IPP\Student\Instruction\InstructionFactory</node>
+    <node x="755.0158102766798" y="1150.9627173913045">\UnitEnum</node>
+    <node x="316.0" y="490.0">\IPP\Student\Instruction\Arithmetic\INT2CHAR_Instruction</node>
+    <node x="111.49999999999994" y="975.0680138339922">\IPP\Student\Exception\SemanticException</node>
+    <node x="737.0" y="84.0">\IPP\Student\Instruction\Arithmetic\EQ_Instruction</node>
+    <node x="95.0" y="258.0">\IPP\Student\Instruction\Flow\LABEL_Instruction</node>
+    <node x="77.49999999999994" y="1057.7525988142293">\IPP\Student\Exception\OperandTypeException</node>
+    <node x="73.49999999999994" y="1099.094891304348">\IPP\Student\Exception\OperandValueException</node>
+    <node x="457.0" y="258.0">\IPP\Student\Instruction\Flow\JUMP_Instruction</node>
+    <node x="115.49999999999994" y="933.7257213438736">\IPP\Student\Exception\StringOpException</node>
+    <node x="298.5173913043477" y="798.8510177865612">\IPP\Core\Exception\IPPException</node>
+    <node x="475.0" y="316.0">\IPP\Student\Instruction\Misc\BREAK_Instruction</node>
+    <node x="446.0" y="200.0">\IPP\Student\Instruction\Memory\CALL_Instruction</node>
+    <node x="636.0" y="258.0">\IPP\Student\Instruction\DataStack\POPS_Instruction</node>
+    <node x="580.0" y="548.0">\IPP\Student\Instruction\Flow\JUMPIFNEQ_Instruction</node>
+    <node x="287.0" y="316.0">\IPP\Student\Instruction\DataStack\PUSHS_Instruction</node>
+    <node x="892.0" y="84.0">\IPP\Student\Instruction\Arithmetic\LT_Instruction</node>
+    <node x="63.49999999999994" y="1140.4371837944664">\IPP\Student\Exception\VariableAccessException</node>
+    <node x="95.0" y="432.0">\IPP\Student\Instruction\String\GETCHAR_Instruction</node>
+    <node x="95.0" y="142.0">\IPP\Student\Instruction\Arithmetic\AND_Instruction</node>
+    <node x="277.0" y="258.0">\IPP\Student\Instruction\Memory\MOVE_Instruction</node>
+    <node x="261.0" y="84.0">\IPP\Student\Instruction\Arithmetic\IDIV_Instruction</node>
+    <node x="496.0" y="374.0">\IPP\Student\Instruction\Memory\DEFVAR_Instruction</node>
+    <node x="755.5158102766798" y="1078.2258794466406">\IPP\Student\DataType</node>
+    <node x="306.0" y="432.0">\IPP\Student\Instruction\String\SETCHAR_Instruction</node>
+    <node x="95.0" y="490.0">\IPP\Student\Instruction\Memory\POPFRAME_Instruction</node>
+    <node x="743.5158102766798" y="683.560029644269">\IPP\Student\VariableData</node>
+    <node x="515.0" y="432.0">\IPP\Student\Instruction\Arithmetic\STRI2INT_Instruction</node>
+    <node x="531.0" y="490.0">\IPP\Student\Instruction\Flow\JUMPIFEQ_Instruction</node>
+    <node x="95.0" y="374.0">\IPP\Student\Instruction\String\CONCAT_Instruction</node>
+    <node x="693.0" y="374.0">\IPP\Student\Instruction\String\STRLEN_Instruction</node>
+    <node x="520.0284584980237" y="954.7794762845851">\IPP\Student\Interpreter</node>
+    <node x="337.9215810276681" y="889.5678162055412">\Exception</node>
+    <node x="431.0" y="142.0">\IPP\Student\Instruction\Arithmetic\ADD_Instruction</node>
+    <node x="263.0" y="142.0">\IPP\Student\Instruction\Flow\EXIT_Instruction</node>
+    <node x="95.0" y="200.0">\IPP\Student\Instruction\Misc\READ_Instruction</node>
+    <node x="95.0" y="548.0">\IPP\Student\Instruction\Memory\CREATEFRAME_Instruction</node>
+    <node x="95.0" y="316.0">\IPP\Student\Instruction\Misc\DPRINT_Instruction</node>
+    <node x="271.0" y="200.0">\IPP\Student\Instruction\Misc\TYPE_Instruction</node>
+    <node x="347.0" y="548.0">\IPP\Student\Instruction\Memory\PUSHFRAME_Instruction</node>
+    <node x="599.0" y="142.0">\IPP\Student\Instruction\Arithmetic\NOT_Instruction</node>
+    <node x="56.49999999999994" y="1181.7794762845851">\IPP\Student\Exception\SourceStructureException</node>
+    <node x="425.0" y="84.0">\IPP\Student\Instruction\Arithmetic\OR_Instruction</node>
+    <node x="298.0" y="374.0">\IPP\Student\Instruction\Memory\RETURN_Instruction</node>
+    <node x="77.49999999999994" y="1016.4103063241108">\IPP\Student\Exception\FrameAccessException</node>
+    <node x="-17.0" y="644.0837944664032">\IPP\Student\Instruction\AbstractInstruction</node>
+    <node x="139.49999999999994" y="892.383428853755">\IPP\Student\Exception\ValueException</node>
+    <node x="620.0" y="200.0">\IPP\Student\Instruction\Arithmetic\MUL_Instruction</node>
+    <node x="743.5158102766798" y="791.8129940711462">\IPP\Student\Argument</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\IPP\Student\Exception\SourceStructureException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="1195.7794762845851" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\DataStack\PUSHS_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="376.0" y="364.0" />
+      <point x="75.0" y="364.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Exception\FrameAccessException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="1030.410306324111" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\MUL_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="699.0" y="248.0" />
+      <point x="75.0" y="248.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\RETURN_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="392.0" y="422.0" />
+      <point x="75.0" y="422.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Misc\READ_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="178.0" y="248.0" />
+      <point x="75.0" y="248.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\AND_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="174.0" y="190.0" />
+      <point x="75.0" y="190.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\GT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="654.0" y="132.0" />
+      <point x="75.0" y="132.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\CALL_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="528.0" y="248.0" />
+      <point x="75.0" y="248.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Exception\VariableAccessException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="1154.4371837944664" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\IDIV_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="338.0" y="132.0" />
+      <point x="75.0" y="132.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\String\GETCHAR_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="195.5" y="480.0" />
+      <point x="75.0" y="480.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\POPFRAME_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="200.5" y="538.0" />
+      <point x="75.0" y="538.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\LT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="963.0" y="132.0" />
+      <point x="75.0" y="132.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\EQ_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="809.5" y="132.0" />
+      <point x="75.0" y="132.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\NOT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="678.0" y="190.0" />
+      <point x="75.0" y="190.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Core\Exception\IPPException" target="\Exception" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="366.5173913043477" y="947.7257213438736" />
+      <point x="10.713853754941567" y="-9.342094861667647" />
+    </edge>
+    <edge source="\IPP\Student\Exception\StringOpException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="947.7257213438736" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\ADD_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="510.0" y="190.0" />
+      <point x="75.0" y="190.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Misc\BREAK_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="562.5" y="364.0" />
+      <point x="75.0" y="364.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\SUB_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="173.0" y="132.0" />
+      <point x="75.0" y="132.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\Exception" target="\Throwable" relationship="REALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="393.9215810276681" y="1038.4102075098854" />
+      <point x="393.8287470355746" y="1038.4102075098854" />
+      <point x="1.9071660079065396" y="6.150750988134405" />
+    </edge>
+    <edge source="\IPP\Student\Exception\ValueException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="906.383428853755" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Exception\OperandTypeException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="1071.7525988142293" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Interpreter" target="\IPP\Core\AbstractInterpreter" relationship="GENERALIZATION">
+      <point x="0.0" y="122.5" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\String\SETCHAR_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="405.5" y="480.0" />
+      <point x="75.0" y="480.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Flow\JUMPIFEQ_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="633.0" y="538.0" />
+      <point x="75.0" y="538.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Exception\SemanticException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="989.0680138339922" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\DEFVAR_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="589.5" y="422.0" />
+      <point x="75.0" y="422.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\CREATEFRAME_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="216.0" y="662.8970355731237" />
+      <point x="-7.824486166009706" y="-48.68675889327949" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\MOVE_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="362.0" y="306.0" />
+      <point x="75.0" y="306.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Misc\DPRINT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="186.0" y="364.0" />
+      <point x="75.0" y="364.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Memory\PUSHFRAME_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="458.5" y="662.8970355731237" />
+      <point x="33.819782608693856" y="-48.68675889327949" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\INT2CHAR_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="418.5" y="538.0" />
+      <point x="75.0" y="538.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\OR_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="498.0" y="132.0" />
+      <point x="75.0" y="132.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\DataType" target="\UnitEnum" relationship="REALIZATION">
+      <point x="0.04518972332300564" y="1.2078260869420774" />
+      <point x="811.5610000000028" y="1144.002677865613" />
+      <point x="811.5158102766798" y="1144.002677865613" />
+      <point x="0.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Misc\TYPE_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="353.5" y="248.0" />
+      <point x="75.0" y="248.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Flow\LABEL_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="181.0" y="306.0" />
+      <point x="75.0" y="306.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Exception\OperandValueException" target="\IPP\Core\Exception\IPPException" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="303.5173913043477" y="1113.094891304348" />
+      <point x="-63.0" y="-0.0" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Flow\EXIT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="342.0" y="190.0" />
+      <point x="75.0" y="190.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Flow\JUMPIFNEQ_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="688.0" y="662.8970355731237" />
+      <point x="2.5865810276662273" y="-48.68675889327949" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\DataStack\POPS_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="719.0" y="306.0" />
+      <point x="75.0" y="306.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Arithmetic\STRI2INT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="612.5" y="480.0" />
+      <point x="75.0" y="480.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Misc\WRITE_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="746.5" y="364.0" />
+      <point x="75.0" y="364.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\String\CONCAT_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="191.5" y="422.0" />
+      <point x="75.0" y="422.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\Flow\JUMP_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="541.5" y="306.0" />
+      <point x="75.0" y="306.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="\IPP\Student\Instruction\String\STRLEN_Instruction" target="\IPP\Student\Instruction\AbstractInstruction" relationship="GENERALIZATION">
+      <point x="0.0" y="-0.0" />
+      <point x="785.5" y="422.0" />
+      <point x="75.0" y="422.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+  </edges>
+  <settings layout="Compact" zoom="0.6147304479878515" showDependencies="false" x="693.5066175889356" y="614.1211857707362" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

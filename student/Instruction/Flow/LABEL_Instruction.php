@@ -6,6 +6,7 @@
 
 namespace IPP\Student\Instruction\Flow;
 use IPP\Student\Instruction\AbstractInstruction;
+use IPP\Student\Argument;
 
 class LABEL_Instruction extends AbstractInstruction
 {

@@ -80,7 +80,7 @@ class Interpreter extends AbstractInterpreter
         if (!array_key_exists(strtoupper($node->getAttribute("opcode")), $this::OP_CODES))
             throw new SourceStructureException("Unknown opcode!");
 
-        if ($node->getAttribute("order") === null || !is_numeric($node->getAttribute("order")))
+        if ($node->getAttribute("order") == null || !is_numeric($node->getAttribute("order")))
             throw new SourceStructureException("Wrong instruction order!");
 
         $order = intval($node->getAttribute("order")); // Cast to integer
@@ -345,8 +345,6 @@ class Interpreter extends AbstractInterpreter
 
             default:
                 throw new ValueException("Tried to get undefined variable type of: $varName");
-                $type = "";
-                break;
         }
         return $type;
     }
