@@ -1,3 +1,6 @@
+School project which aim was to create a interpret.
+I've written code inside "Student" folder, rest of the project was a template made by:
+
 # IPP - PHP Project Core
 
 **Authors:** 
